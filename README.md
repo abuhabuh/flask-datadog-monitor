@@ -1,5 +1,4 @@
 # Overview
 
-Evil server that makes a POST request resource server and initiates a fund
-transfer.
+Utility for auto generating terraform monitor specifications from endpoints.
 
