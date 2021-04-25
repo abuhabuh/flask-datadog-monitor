@@ -3,7 +3,7 @@ FROM frolvlad/alpine-python3
 ### create app directory, copy app, install
 ### note: docker-compose will overwrite this with a bind mount when starting
 RUN mkdir -p /var/www/server/client-server
-COPY test-app /var/www/server/client-server
+COPY . /var/www/server/client-server
 RUN pip install -r /var/www/server/client-server/requirements.txt
 
 ### env setup to the server
