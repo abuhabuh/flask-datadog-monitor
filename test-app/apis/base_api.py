@@ -10,6 +10,12 @@ def add_endpoints(flask_app, jinja_env):
     def get_root():
         return jinja_env.get_template('index.html').render()
 
+    @flask_app.route('/date', methods=['POST'])
+    def post_date():
+        return json.dumps({
+            'post date':  'yay',
+        })
+
     @flask_app.route('/date', methods=['GET'])
     def get_date():
         return json.dumps({

@@ -1,4 +1,5 @@
 import importlib
+import json
 import os
 import sys
 
@@ -39,21 +40,21 @@ def main():
     endpoints_info = {}
     for r in flask_app.url_map.iter_rules():
         endpoints_info[r.rule] = {
-            'methods': r.methods,
+            'methods': list(r.methods),
         }
 
         endpoint = r.rule
         methods = r.methods
 
-    print(endpoint)
-    print(methods)
-    print(jinja_env.get_template('datadog_monitor.tmpl').render(
-        monitor_name='foo',
-        monitor_name_pretty='foo me once',
-        msg='asdfafd',
-        escalation_msg='escalate_asdfasdf',
-        monitor_query='select *',
-    ))
+    print(json.dumps(endpoints_info, indent=2))
+
+    # print(jinja_env.get_template('datadog_monitor.tmpl').render(
+    #     monitor_name='foo',
+    #     monitor_name_pretty='foo me once',
+    #     msg='asdfafd',
+    #     escalation_msg='escalate_asdfasdf',
+    #     monitor_query='select *',
+    # ))
 
 
 if __name__ == '__main__':
