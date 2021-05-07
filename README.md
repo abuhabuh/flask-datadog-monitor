@@ -5,8 +5,7 @@ DONE
 - App container sending to Datadog
 
 TODO
-- update endpoint to trigger 500 responses
-- integrate terraform into project to write Datadog monitors
+- LEFT OFF: updating monitor_generator.py to filter for right endpoints and methods
 - start generating terraform monitors
 
 # Issues
@@ -20,7 +19,7 @@ Utility for auto generating terraform monitor specifications from endpoints.
 
 ## Running
 
-Running the test app service against a test DataDog
+### Running the test app service against a test DataDog
 
 Assumptions
 - Test DataDog account is create and API Key is available
@@ -28,4 +27,12 @@ Assumptions
 Running
 1. Update docker-compose.yml in test-app directory and set API Key for dd-agent
 1. Build and run docker compose: docker-compose build && docker-compose up
+
+
+### Running auto terraform generator
+
+Running
+1. source the venv that the application runs in
+  1. todo: need to make parser into an executable
+1. python monitor_generator.py ../test-app/app:app
 
