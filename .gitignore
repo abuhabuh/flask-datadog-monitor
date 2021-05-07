@@ -1,4 +1,6 @@
+zz_tmp_secrets.txt
 *.swp
+.terraform
 tags.lock
 venv
 __pycache__

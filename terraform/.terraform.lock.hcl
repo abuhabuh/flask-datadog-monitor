@@ -1,0 +1,22 @@
+# This file is maintained automatically by "terraform init".
+# Manual edits may be lost in future updates.
+
+provider "registry.terraform.io/datadog/datadog" {
+  version = "2.25.0"
+  hashes = [
+    "h1:W/mxoEBuDp4O8G6+too6GQMGOqbEJSHoSkYxo1WPlK4=",
+    "zh:1e43040444a4adb754d030f0e11f8ffb078ad143c26c17b4f169ec6e51254e7a",
+    "zh:2ae06d9c08f85ee7a6ab3918704605758f23084a0ce73bd371bfe473f0e5103b",
+    "zh:355755f11c8c2e5936337314c7a542b01131b650385fd1c35ef6abcabf12679b",
+    "zh:3af022e6f14fa9a5b20f2a561ac14714429c71e187572357d61202760ec5052c",
+    "zh:3f8d2abec7bc58de75ba10001fc42af343e86a950e09145132a17d9f70824362",
+    "zh:5abb0b0168b0d1ee122077cb9a5128b54c027b6122af7088e001d929697037f9",
+    "zh:5be83c47c0319980effc5e9674f88b7a3073e4bca08e205cce0bcad7b6d86f7f",
+    "zh:7209b895e2a507932d2c874fd7a305f5217ba338f19c9b59f1f18eb8e7398bf9",
+    "zh:7f43f06a17b0acbf66d2e6e30597a7e1a9cc314a8b9bd2c3947480a9c43923e0",
+    "zh:86f72196c7dd5704c66143d5b21cc05c848894e00ab39cfcff4328b399a7a682",
+    "zh:b0200dbd0c25d589c703eee6986bbd5adf588b4013d25e62dd418dd9a12833ab",
+    "zh:b05a35ea0b8eaf74e6495221a299e5c3b6696a73716956bdf7bbca355bf729b8",
+    "zh:fa8ef213851dcc35cd3c5fc8c34a730f1a69c4965491b226181c37d96090981d",
+  ]
+}
