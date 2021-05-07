@@ -1,12 +1,13 @@
 # Progress
 
-Endpoint generator output is hooked up. Need to get sample Docker metrics
-working so I can try to test this.
+DONE
+- Endpoint generator output is hooked up.
+- App container sending to Datadog
 
-Current error is that ddtrace is trying to send metrics to the agent but it
-cannot find the agent on localhost:8126 or whatever. Probably not able to get
-through to the other Docker container.
-
+TODO
+- update endpoint to trigger 500 responses
+- integrate terraform into project to write Datadog monitors
+- start generating terraform monitors
 
 # Issues
 
