@@ -12,10 +12,7 @@ WORKDIR /var/www/server/
 ENV PYTHONPATH=/var/www/server/client-server
 ENV FLASK_APP=client-server/app:app
 
-# Datadog setup
-ENV DD_SERVICE="test_app_service"
-ENV DD_ENV="prod"
-ENV DD_LOGS_INJECTION=true
-
+# Starting the app with DataDog ddtrace-run
+# - datadog env and service setup is specified in docker-compose file
 ENTRYPOINT ["ddtrace-run", "flask", "run", "--port", "5000", "--host", "0.0.0.0", "--reload"]
 

@@ -19,12 +19,12 @@ Utility for auto generating terraform monitor specifications from endpoints.
 
 ## Running
 
-Datadog agent should be up:
+Running the test app service against a test DataDog
 
-docker run -d --name dd-agent -p 8126:8127/tcp -v /var/run/docker.sock:/var/run/docker.sock:ro -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e DD_API_KEY=<api-key> -e DD_SITE="datadoghq.com" gcr.io/datadoghq/agent:7
+Assumptions
+- Test DataDog account is create and API Key is available
 
-
-1. Source venv of target app (need to make flask ddog parser a package)
-1. cd monitor-generator/
-1. python flask_endpoint_parser.py ../test-app/app:app
+Running
+1. Update docker-compose.yml in test-app directory and set API Key for dd-agent
+1. Build and run docker compose: docker-compose build && docker-compose up
 
