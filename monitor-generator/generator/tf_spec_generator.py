@@ -15,8 +15,10 @@ jinja_env = Environment(
 
 
 def get_tf_spec(monitor: DatadogMonitor, env: str, service_name: str) -> str:
-
-    at: AlertThresholds = monitor.get_alert_threholds()
+    """Generate a terraform spec for a particular monitor
+    """
+    service_monitor_name: str = _get_service_monitor_name(service_name, monitor)
+    at: AlertThresholds = monitor.get_alert_thresholds()
 
     query_str: str = _get_tf_query(
             env=env,
@@ -26,8 +28,6 @@ def get_tf_spec(monitor: DatadogMonitor, env: str, service_name: str) -> str:
             data_period=monitor.data_period,
             threshold=at.critical_threshold,
     )
-
-    service_monitor_name: str = _get_service_monitor_name(service_name, monitor)
 
     spec_str: str = jinja_env.get_template('datadog_monitor.tmpl').render(
         service_name=service_name,
@@ -57,7 +57,7 @@ def _get_tf_query(
         endpoint_path: str,
         method: str,
         data_period: str,
-        threshold: str,
+        threshold: float,
 ):
     """
     :param data_period: e.g. '15m' for "15 minutes"

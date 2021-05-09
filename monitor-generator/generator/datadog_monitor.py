@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from typing import Optional
 import enum
 
+import endpoint_util
+
 
 class MonitorType(enum.Enum):
     ERROR_RATE = 1
@@ -11,7 +13,7 @@ class MonitorType(enum.Enum):
 
 @dataclass(frozen=True)
 class AlertThresholds:
-    critical_threshold: Optional[float] = None
+    critical_threshold: float
     critical_recovery: Optional[float] = None
     warning_threshold: Optional[float] = None
     warning_recovery: Optional[float] = None
@@ -24,11 +26,13 @@ class DatadogMonitor:
     method: str
     monitor_type: MonitorType
     data_period: str
-    alert_threholds: Optional[AlertThresholds] = None
+    alert_thresholds: Optional[AlertThresholds] = None
 
     @property
     def name(self) -> str:
-        cleaned_endpoint_path: str = self.endpoint_path.replace('/', '_')
+        cleaned_endpoint_path: str = endpoint_util.clean_endpoint_for_naming(
+            self.endpoint_path,
+        )
         return f'{self.method}_{cleaned_endpoint_path}-{self.monitor_type.name}'
 
     @property
@@ -39,25 +43,25 @@ class DatadogMonitor:
         """
         return f'{self.method}_{self.endpoint_path}'.lower()
 
-    def get_alert_threholds(self) -> AlertThresholds:
-        if self.alert_threholds:
-            return self.alert_threholds
+    def get_alert_thresholds(self) -> AlertThresholds:
+        if self.alert_thresholds:
+            return self.alert_thresholds
         return _make_default_threholds(self.monitor_type)
 
 
 def _make_default_threholds(monitor_type: MonitorType) -> AlertThresholds:
     """Default alert thresholds for different monitor types
     """
-    at = AlertThresholds()
     if monitor_type == MonitorType.ERROR_RATE:
         # Default error rate
         # - critical if above 10%
         # - warn if above 5%
-        at = AlertThresholds(
+        return AlertThresholds(
             critical_threshold=0.10,
             critical_recovery=None,
             warning_threshold=0.05,
             warning_recovery=None,
         )
-    return at
+
+    raise Exception(f'No default threshold found for monitor type: {monitor_type}')
 

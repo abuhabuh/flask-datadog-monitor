@@ -10,6 +10,7 @@ import flask
 from flask_endpoint import FlaskEndpoint
 from datadog_monitor import DatadogMonitor
 import datadog_monitor_generator
+import endpoint_util
 import flask_endpoint_parser
 import tf_spec_generator
 
@@ -31,29 +32,48 @@ def _flask_app_from_location(module_name: str) -> flask.app.Flask:
     return getattr(flask_app_module, flask_app_obj)
 
 
-def _gen_and_write_monitors(output_file: str, fe_list: list[FlaskEndpoint]):
-    print([str(x) for x in fe_list])
+def _gen_and_monitors(
+        fe_list: list[FlaskEndpoint],
+        ) -> dict[str, list[DatadogMonitor]]:
 
-    fe = fe_list[0]
-    monitors: list = datadog_monitor_generator.monitors_from_flask_endpoint(fe)
+    print(f'Endpoints: {[str(x) for x in fe_list]}')
+    return {
+            endpoint_util.clean_endpoint_for_naming(fe.get_endpoint()):
+                datadog_monitor_generator.monitors_from_flask_endpoint(fe)
+                    for fe in fe_list}
 
-    # todo: only looking at 1st monitor
-    monitor: DatadogMonitor = monitors[0]
 
-    env: str = 'prod'
-    service_name: str = 'test_service'
+def _write_tf_output(
+        output_dir: str,
+        tf_file_prefix: str,
+        endpoint_to_monitors: dict[str, list[DatadogMonitor]],
+        ):
+    for endpoint, monitors in endpoint_to_monitors.items():
+        monitor: DatadogMonitor = monitors[0]
 
-    tf_spec: str = tf_spec_generator.get_tf_spec(monitor, env, service_name)
-    print('**** tf spec ****')
-    print(f'{tf_spec}')
+        env: str = 'prod'
+        service_name: str = 'test_service'
 
-    with open(output_file, 'w') as fp:
-        fp.write(tf_spec)
+        tf_spec: str = tf_spec_generator.get_tf_spec(monitor, env, service_name)
+
+        output_file = _get_output_file(tf_file_prefix, output_dir, endpoint)
+        with open(output_file, 'w') as fp:
+            fp.write(tf_spec)
+
+        print(f'wrote output to {output_file}')
+
+
+def _get_output_file(prefix: str, output_dir: str, endpoint: str) -> str:
+    if output_dir.endswith('/'):
+        output_dir = output_dir[:-1]
+
+    return f'{output_dir}/{prefix}-{endpoint}.tf'
 
 
 def main():
     app_location: str = sys.argv[1]
-    output_file: str = sys.argv[2]
+    output_dir: str = sys.argv[2]
+    tf_file_prefix: str = sys.argv[3]
 
     flask_app: flask.app.Flask = _flask_app_from_location(app_location)
 
@@ -61,7 +81,10 @@ def main():
         flask_app,
     )
 
-    _gen_and_write_monitors(output_file, fe_list)
+    endpoint_to_monitors: dict[str, list[DatadogMonitor]] = \
+            _gen_and_monitors(fe_list)
+
+    _write_tf_output(output_dir, tf_file_prefix, endpoint_to_monitors)
 
 
 if __name__ == '__main__':
