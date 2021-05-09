@@ -7,24 +7,26 @@ resource "datadog_monitor" "{{monitor_name}}" {
   query = "{{monitor_query}}"
 
   monitor_thresholds {
-    warning           = 2
-    warning_recovery  = 1
-    critical          = 4
-    critical_recovery = 3
+    {% if warning_threshold %}
+      warning = {{warning_threshold}}
+    {% endif %}
+    {% if warning_recovery %}
+      warning_recovery = {{warning_recovery}}
+    {% endif %}
+    {% if critical_threshold %}
+      critical = {{critical_threshold}}
+    {% endif %}
+    {% if critical_recovery %}
+      critical_recovery = {{critical_recovery}}
+    {% endif %}
   }
 
-  notify_no_data    = false
-  renotify_interval = 60
-
-  notify_audit = false
-  timeout_h    = 60
   include_tags = true
 
-  # ignore any changes in silenced value; using silenced is deprecated in favor of downtimes
-  lifecycle {
-    ignore_changes = [silenced]
-  }
-
-  tags = ["foo:bar", "baz"]
+  tags = [
+    "service:{{service_name}}",
+    "env:{{env}}",
+    "resource_name:{{resource_name}}"
+  ]
 }
 

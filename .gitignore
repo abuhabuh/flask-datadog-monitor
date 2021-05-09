@@ -1,6 +1,14 @@
+# temporary secrets file
 zz_tmp_secrets.txt
+
+# vim files
 *.swp
+tags.lock  # vim tagging file
+
+# terraform local test files
 .terraform
-tags.lock
+terraform.tfstate*
+
+# python files
 venv
 __pycache__
