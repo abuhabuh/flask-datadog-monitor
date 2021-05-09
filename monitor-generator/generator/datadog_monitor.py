@@ -23,5 +23,6 @@ class DatadogMonitor:
 
     @property
     def name(self) -> str:
-        return f'{self.method}_{self.endpoint_path}-{self.monitor_type.name}'
+        cleaned_endpoint_path: str = self.endpoint_path.replace('/', '_')
+        return f'{self.method}_{cleaned_endpoint_path}-{self.monitor_type.name}'
 

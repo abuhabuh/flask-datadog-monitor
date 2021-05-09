@@ -1,12 +1,14 @@
 """Module for generating Terraform monitor specifications
 """
-from datadog_monitor import DatadogMonitor
+import pathlib
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from datadog_monitor import DatadogMonitor
+
 jinja_env = Environment(
     loader=FileSystemLoader(
-        'templates'
+        str(pathlib.Path(__file__).parent.absolute()) + '/../templates',
     ),
     autoescape=select_autoescape(['html', 'xml'])
 )

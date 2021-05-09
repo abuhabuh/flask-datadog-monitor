@@ -47,23 +47,13 @@ def _gen_and_write_monitors(output_file: str, fe_list: list[FlaskEndpoint]):
     print('**** tf spec ****')
     print(f'{tf_spec}')
 
-#    with open(output_file, 'w') as fp:
-#
-#        out_str = jinja_env.get_template('datadog_monitor.tmpl').render(
-#            monitor_name='foo',
-#            monitor_name_pretty='foo me once',
-#            msg='asdfafd',
-#            escalation_msg='escalate_asdfasdf',
-#            monitor_query='select *',
-#        )
-#
-#        print(out_str)
-#        fp.write(out_str)
+    with open(output_file, 'w') as fp:
+        fp.write(tf_spec)
 
 
 def main():
     app_location: str = sys.argv[1]
-    output_file: str = 'endpoints.tf'
+    output_file: str = sys.argv[2]
 
     flask_app: flask.app.Flask = _flask_app_from_location(app_location)
 
