@@ -1,1 +1,3 @@
+flask
+mypy
 Jinja2

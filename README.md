@@ -15,7 +15,8 @@ import dependencies. i.e. need to source venv of target app
 
 # Overview
 
-Utility for auto generating terraform monitor specifications from endpoints.
+Utility for auto generating terraform monitor specifications from endpoints for
+a single service.
 
 ## Running
 
