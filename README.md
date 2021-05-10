@@ -3,10 +3,11 @@
 DONE
 - Endpoint generator output is hooked up.
 - App container sending to Datadog
+- Terraform specs generating and writable to Datadog
 
 TODO
-- LEFT OFF: updating monitor_generator.py to filter for right endpoints and methods
-- start generating terraform monitors
+- Test alert thresholds on Datadog and ensure they are working
+- Turn program into
 
 # Issues
 
