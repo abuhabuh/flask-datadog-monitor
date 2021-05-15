@@ -8,12 +8,12 @@ DOCKER_COMPOSE_FILE = $(APP_DIR)/docker-compose.yml
 
 # *** Main targets
 
+# Build
+build:
+	python3 -m build
+
 # Deploy datadog configs and standup local
 local-all: sync-datadog local-up
-
-# Deploy datadog configs
-sync-datadog: gen-tf
-	terraform -chdir=$(TERRAFORM_DIR) apply
 
 # Build and deploy test app locally along with associated DataDog monitors
 # - Datadog account env vars must be specified
@@ -24,6 +24,10 @@ local-down:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down
 
 test: gen-tf
+
+# Deploy datadog configs
+sync-datadog: gen-tf
+	terraform -chdir=$(TERRAFORM_DIR) apply
 
 
 # *** Supporting targets
