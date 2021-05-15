@@ -1,5 +1,4 @@
-# FROM frolvlad/alpine-python3
-FROM python:3
+FROM python:3.9
 
 # create app directory, copy app, install
 # note: docker-compose will overwrite this with a bind mount when starting

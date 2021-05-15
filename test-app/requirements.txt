@@ -1,3 +1,0 @@
-ddtrace
-flask
-Jinja2

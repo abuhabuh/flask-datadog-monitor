@@ -1,7 +1,7 @@
 # temporary files
 # todo: get rid of these
 zz_tmp_secrets.txt
-test1*.tf
+test*.tf
 
 # vim files
 *.swp

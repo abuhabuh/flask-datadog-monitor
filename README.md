@@ -6,6 +6,7 @@ DONE
 - Terraform specs generating and writable to Datadog
 
 TODO
+- Creating Make commands for easily running things -- .phony and test target not working
 - Test alert thresholds on Datadog and ensure they are working
 - Turn program into
 
