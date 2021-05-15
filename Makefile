@@ -1,4 +1,4 @@
-.PHONY: test
+.PHONY: test, local-all, sync-datadog, local-up, local-down
 
 # Variables
 APP_DIR = test/app
@@ -12,7 +12,7 @@ DOCKER_COMPOSE_FILE = $(APP_DIR)/docker-compose.yml
 local-all: sync-datadog local-up
 
 # Deploy datadog configs
-sync-datadog:
+sync-datadog: gen-tf
 	terraform -chdir=$(TERRAFORM_DIR) apply
 
 # Build and deploy test app locally along with associated DataDog monitors
@@ -23,11 +23,13 @@ local-up: docker local-down
 local-down:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down
 
-test:
-	python monitor-generator/generator/main.py $(APP_DIR)/app:app $(TERRAFORM_DIR)/auto-gen-monitors/ test
+test: gen-tf
 
 
 # *** Supporting targets
+
+gen-tf:
+	python monitor-generator/generator/main.py $(APP_DIR)/app:app $(TERRAFORM_DIR)/auto-gen-monitors/ test
 
 # Build all docker assets
 docker:

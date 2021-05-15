@@ -1,6 +1,6 @@
 # temporary files
 # todo: get rid of these
-zz_tmp_secrets.txt
+zz_tmp_env.txt
 test*.tf
 
 # vim files

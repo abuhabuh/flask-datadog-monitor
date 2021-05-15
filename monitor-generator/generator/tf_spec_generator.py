@@ -62,6 +62,7 @@ def _get_tf_query(
     """
     :param data_period: e.g. '15m' for "15 minutes"
     """
+    method = method.lower()
     return f"""
             sum(last_{data_period}): (
                sum:trace.flask.request.errors{{

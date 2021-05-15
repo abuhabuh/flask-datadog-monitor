@@ -1,14 +1,12 @@
 # Progress
 
 DONE
-- Endpoint generator output is hooked up.
-- App container sending to Datadog
-- Terraform specs generating and writable to Datadog
+- App and DDog agent running and sending metrics
+- ErrorRate monitor prototype working
 
 TODO
-- Creating Make commands for easily running things -- .phony and test target not working
-- Test alert thresholds on Datadog and ensure they are working
-- Turn program into
+- Setup context descriptors
+- Package program to run on an app
 
 # Issues
 
@@ -28,8 +26,10 @@ Assumptions
 - Test DataDog account is create and API Key is available
 
 Running
-1. Update docker-compose.yml in test-app directory and set API Key for dd-agent
-1. Build and run docker compose: docker-compose build && docker-compose up
+1. Set DATADOG_API_KEY in env vars
+1. Set DATADOG_APP_KEY in env vars
+1. `make sync-datadog`: this applies monitoring configs to datadog acnt
+1. `make local-up`: this builds app and dd-agent containers and runs them locally
 
 
 ### Running auto terraform generator

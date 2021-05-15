@@ -49,23 +49,22 @@ def _write_tf_output(
         output_dir: str,
         tf_file_prefix: str,
         endpoint_to_monitors: dict[str, list[DatadogMonitor]],
+        service_name: str,
+        service_env: str,
         ):
     for endpoint, monitors in endpoint_to_monitors.items():
         monitor: DatadogMonitor = monitors[0]
 
-        env: str = 'prod'
-        service_name: str = 'test_service'
+        tf_spec: str = tf_spec_generator.get_tf_spec(monitor, service_env, service_name)
 
-        tf_spec: str = tf_spec_generator.get_tf_spec(monitor, env, service_name)
-
-        output_file = _get_output_file(tf_file_prefix, output_dir, endpoint)
+        output_file: str = _get_output_file_name(tf_file_prefix, output_dir, endpoint)
         with open(output_file, 'w') as fp:
             fp.write(tf_spec)
 
         print(f'wrote output to {output_file}')
 
 
-def _get_output_file(prefix: str, output_dir: str, endpoint: str) -> str:
+def _get_output_file_name(prefix: str, output_dir: str, endpoint: str) -> str:
     if output_dir.endswith('/'):
         output_dir = output_dir[:-1]
 
@@ -77,6 +76,9 @@ def main():
     output_dir: str = sys.argv[2]
     tf_file_prefix: str = sys.argv[3]
 
+    service_name = os.environ['DD_MONITOR_GEN_SERVICE']
+    service_env = os.environ['DD_MONITOR_GEN_SERVICE_ENV']
+
     flask_app: flask.app.Flask = _flask_app_from_location(app_location)
 
     fe_list: list[FlaskEndpoint] = flask_endpoint_parser.parse_endpoints(
@@ -86,7 +88,13 @@ def main():
     endpoint_to_monitors: dict[str, list[DatadogMonitor]] = \
             _gen_and_monitors(fe_list)
 
-    _write_tf_output(output_dir, tf_file_prefix, endpoint_to_monitors)
+    _write_tf_output(
+            output_dir,
+            tf_file_prefix,
+            endpoint_to_monitors,
+            service_name,
+            service_env,
+            )
 
 
 if __name__ == '__main__':
