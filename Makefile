@@ -1,4 +1,4 @@
-.PHONY: test, local-all, sync-datadog, local-up, local-down
+.PHONY: build, clean, test, local-all, sync-datadog, local-up, local-down
 
 # Variables
 APP_DIR = test/app
@@ -9,8 +9,13 @@ DOCKER_COMPOSE_FILE = $(APP_DIR)/docker-compose.yml
 # *** Main targets
 
 # Build
-build:
+build: clean
 	python3 -m build
+
+clean:
+	rm -rf *.egg-info
+	rm -rf dist
+	rm -rf build
 
 # Deploy datadog configs and standup local
 local-all: sync-datadog local-up

@@ -3,12 +3,12 @@
 import functools
 
 
-def monitor_tag(**kwargs):
+def tag_route(**kwargs):
     """Primary decorator for endpoints
 
     Example:
 
-    @monitor_tag(arg1='foo')
+    @tag(arg1='foo')
     def foo():
         print(f'bar')
     print(foo.__dict__)
