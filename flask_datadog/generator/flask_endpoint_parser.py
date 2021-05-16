@@ -3,7 +3,7 @@
 import flask
 import werkzeug
 
-from flask_endpoint import FlaskEndpoint
+from flask_datadog.generator.flask_endpoint import FlaskEndpoint
 
 
 def parse_endpoints(flask_app: flask.app.Flask) -> list[FlaskEndpoint]:

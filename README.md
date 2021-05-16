@@ -5,11 +5,9 @@ DONE
 - ErrorRate monitor prototype working
 
 TODO
-- getting imports right -- just move tag.py to top level flask-datadog file and do
-  `from tag import monitor_tag` in __init__.py of flask-datadog
-
-- Setup context descriptors
-- Package program to run on an app
+- Import route_tagger into sample app and tag routes
+  - Import should be from source so no need to reinstall when updates made
+  - Try to read tagged routes in the tf_generator
 
 # Issues
 

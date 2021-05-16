@@ -9,12 +9,12 @@ import sys
 # different versions of flask
 import flask
 
-from flask_endpoint import FlaskEndpoint
-from datadog_monitor import DatadogMonitor
-import datadog_monitor_generator
-import endpoint_util
-import flask_endpoint_parser
-import tf_spec_generator
+from flask_datadog.generator.flask_endpoint import FlaskEndpoint
+from flask_datadog.generator.datadog_monitor import DatadogMonitor
+from flask_datadog.generator import datadog_monitor_generator
+from flask_datadog.generator import endpoint_util
+from flask_datadog.generator import flask_endpoint_parser
+from flask_datadog.generator import tf_spec_generator
 
 
 def _flask_app_from_location(module_name: str) -> flask.app.Flask:

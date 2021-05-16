@@ -2,22 +2,34 @@
 """
 import functools
 
+import jsonschema
+
+from flask_datadog.shared import route_constants
+
+
+def _validate_tag(tag_spec: dict) -> bool:
+    print(f'tag_spec: {tag_spec}')
+    ret_val = jsonschema.validate(instance=tag_spec, schema=route_constants.ROUTE_SCHEMA)
+    print(f'validate returned {ret_val}')
+    return True
+
 
 def tag_route(**kwargs):
     """Primary decorator for endpoints
 
     Example:
 
-    @tag(arg1='foo')
+    @tag(monitors={})
     def foo():
         print(f'bar')
-    print(foo.__dict__)
 
     """
 
     def decorator_fn(func):
 
-        func.__dict__['foo'] = 'bar'
+        if 'monitors' in kwargs:
+            func.__dict__[route_constants.ROUTE_INFO_KEY] = kwargs['monitors']
+
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             return func(*args, **kwargs)
@@ -25,4 +37,19 @@ def tag_route(**kwargs):
         return wrapper
 
     return decorator_fn
+
+
+@tag_route(
+    monitors={
+        route_constants.MonitorType.ERROR_RATE_MONITOR.name: {
+            route_constants.ThresholdTypes.CRITICAL_THRESHOLD.name: 0.1,
+        },
+    },
+)
+def foo():
+    print('bar')
+foo()
+
+print(f'call with {foo.__dict__}')
+_validate_tag(foo.__dict__[route_constants.ROUTE_INFO_KEY])
 

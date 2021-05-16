@@ -4,7 +4,7 @@ import pathlib
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from datadog_monitor import AlertThresholds, DatadogMonitor
+from flask_datadog.generator.datadog_monitor import AlertThresholds, DatadogMonitor
 
 jinja_env = Environment(
     loader=FileSystemLoader(

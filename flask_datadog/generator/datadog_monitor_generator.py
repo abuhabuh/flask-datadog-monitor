@@ -1,8 +1,8 @@
 """DataDog monitor generator logic
 """
 
-from datadog_monitor import DatadogMonitor, MonitorType
-from flask_endpoint import FlaskEndpoint
+from flask_datadog.generator.datadog_monitor import DatadogMonitor, MonitorType
+from flask_datadog.generator.flask_endpoint import FlaskEndpoint
 
 
 def monitors_from_flask_endpoint(

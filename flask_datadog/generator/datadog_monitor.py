@@ -2,13 +2,9 @@
 """
 from dataclasses import dataclass, field
 from typing import Optional
-import enum
 
-import endpoint_util
-
-
-class MonitorType(enum.Enum):
-    ERROR_RATE = 1
+from flask_datadog.generator import endpoint_util
+from flask_datadog.shared.route_constants import MonitorType
 
 
 @dataclass(frozen=True)
