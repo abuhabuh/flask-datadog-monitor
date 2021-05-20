@@ -26,7 +26,6 @@ local-up: docker local-down
 local-down:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down
 
-# TODO: not working
 check: clean-py-cache
 	mypy -p flask_datadog
 test: gen-tf

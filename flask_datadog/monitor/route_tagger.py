@@ -2,7 +2,7 @@
 """
 import functools
 
-import jsonschema
+import jsonschema  # type: ignore
 
 from flask_datadog.shared import route_constants
 

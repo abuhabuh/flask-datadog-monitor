@@ -21,7 +21,7 @@ def monitors_from_flask_endpoint(
     monitor = DatadogMonitor(
         endpoint_path=endpoint,
         method=method,
-        monitor_type=MonitorType.ERROR_RATE,
+        monitor_type=MonitorType.ERROR_RATE_MONITOR,
         data_period='10m',
     )
 

@@ -48,7 +48,7 @@ class DatadogMonitor:
 def _make_default_threholds(monitor_type: MonitorType) -> AlertThresholds:
     """Default alert thresholds for different monitor types
     """
-    if monitor_type == MonitorType.ERROR_RATE:
+    if monitor_type == MonitorType.ERROR_RATE_MONITOR:
         # Default error rate
         # - critical if above 10%
         # - warn if above 5%
