@@ -29,12 +29,15 @@ services:
   test-app:
     image: test-app
     build:
-      context: .
-      dockerfile: Dockerfile
+      # context is the root of flask-datadog project
+      context: ../..
+      dockerfile: test/app/Dockerfile
     environment:
+      # DD service, env, and version are for tagging events in ddog
       DD_SERVICE: "${DD_MONITOR_GEN_SERVICE}"
       DD_ENV: "${DD_MONITOR_GEN_SERVICE_ENV}"
       DD_VERSION: "${DD_MONITOR_GEN_SERVICE_VERSION}"
+      # agent host is the name of the dd-sgent docker service above
       DD_AGENT_HOST: dd-agent
       DD_TRACE_AGENT_PORT: "8126"
       DD_PROFILING_ENABLED: "true"
@@ -43,6 +46,8 @@ services:
       com.datadoghq.tags.env: "prod"
       com.datadoghq.tags.service: "test-app"
       com.datadoghq.tags.version: "0.0.1"
+    volumes:
+      - "../..:/var/www/src/"
     ports:
       - "5000:5000"
     networks:

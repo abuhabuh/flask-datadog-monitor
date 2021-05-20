@@ -1,15 +1,21 @@
+# NOTE: Context for this build file is set by the docker-compose.yml file
 FROM python:3.9
 
-# create app directory, copy app, install
+# Variables
+ARG SRC_DIR=/var/www/src
+
+# Copy flask-datadog up to container
 # note: docker-compose will overwrite this with a bind mount when starting
-RUN mkdir -p /var/www/server/client-server
-COPY . /var/www/server/client-server
-RUN pip install -r /var/www/server/client-server/requirements.txt
+RUN mkdir -p /var/www/src
+COPY . /var/www/src
 
 # env setup to the server
-WORKDIR /var/www/server/
-ENV PYTHONPATH=/var/www/server/client-server
-ENV FLASK_APP=client-server/app:app
+WORKDIR /var/www/src/test/app/
+RUN pip install -r /var/www/src/test/app/requirements.txt
+
+# Set Env vars -- additional env vars set in docker-compose
+ENV PYTHONPATH=/var/www/src/test/app/
+ENV FLASK_APP=app:app
 
 # Starting the app with DataDog ddtrace-run
 # - datadog env and service setup is specified in docker-compose file

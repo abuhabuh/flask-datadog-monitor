@@ -3,11 +3,10 @@
 DONE
 - App and DDog agent running and sending metrics
 - ErrorRate monitor prototype working
+- flask-datadog package working and usable by test app
 
 TODO
-- Import route_tagger into sample app and tag routes
-  - Import should be from source so no need to reinstall when updates made
-  - Try to read tagged routes in the tf_generator
+- Try to read tagged routes in the tf_generator
 
 # Issues
 
@@ -31,6 +30,10 @@ Running
 1. Set DATADOG_APP_KEY in env vars
 1. `make sync-datadog`: this applies monitoring configs to datadog acnt
 1. `make local-up`: this builds app and dd-agent containers and runs them locally
+
+Local setup
+- Local docker compose environment runs test server in editable mode so you
+  can modify python files while testing.
 
 
 ### Running auto terraform generator

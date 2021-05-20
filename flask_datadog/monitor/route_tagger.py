@@ -39,6 +39,7 @@ def tag_route(**kwargs):
     return decorator_fn
 
 
+# TODO: remove this test code
 @tag_route(
     monitors={
         route_constants.MonitorType.ERROR_RATE_MONITOR.name: {
