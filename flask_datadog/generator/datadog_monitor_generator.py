@@ -29,7 +29,7 @@ def monitors_from_flask_endpoint(
             monitor_type=ddog_constants.MonitorType(mon_type),
             endpoint_path=endpoint,
             method=method,
-            data_period='10m',
+            mon_spec=mon_spec,
             ))
 
     return monitors

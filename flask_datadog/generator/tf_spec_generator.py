@@ -25,7 +25,7 @@ def get_tf_spec(monitor: DatadogMonitor, env: str, service_name: str) -> str:
             service_name=service_name,
             endpoint_path=monitor.endpoint_path,
             method=monitor.method,
-            data_period=monitor.data_period,
+            alert_period=monitor.alert_period,
             threshold=at.critical_threshold,
     )
 
@@ -56,15 +56,15 @@ def _get_tf_query(
         service_name: str,
         endpoint_path: str,
         method: str,
-        data_period: str,
+        alert_period: str,
         threshold: float,
 ):
     """
-    :param data_period: e.g. '15m' for "15 minutes"
+    :param alert_period: e.g. '15m' for "15 minutes"
     """
     method = method.lower()
     return f"""
-            sum(last_{data_period}): (
+            sum(last_{alert_period}): (
                sum:trace.flask.request.errors{{
                    env:{env},
                    service:{service_name},

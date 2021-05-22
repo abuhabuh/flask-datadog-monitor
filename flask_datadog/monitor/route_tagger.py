@@ -4,13 +4,14 @@ import functools
 
 import jsonschema  # type: ignore
 
+from flask_datadog.shared import ddog_constants
 from flask_datadog.shared import route_constants
 
 
 def validate_tag(tag_spec: dict) -> bool:
     ret_val = jsonschema.validate(
             instance=tag_spec,
-            schema=route_constants.ROUTE_SCHEMA,
+            schema=ddog_constants.DDOG_MONITOR_SCHEMA,
             )
     return True
 

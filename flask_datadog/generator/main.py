@@ -34,11 +34,9 @@ def _flask_app_from_location(module_name: str) -> flask.app.Flask:
     return getattr(flask_app_module, flask_app_obj)
 
 
-def _gen_and_monitors(
+def _gen_monitors(
         fe_list: list[FlaskEndpoint],
         ) -> dict[str, list[DatadogMonitor]]:
-
-    print(f'Endpoints: {[str(x) for x in fe_list]}')
     return {
             endpoint_util.clean_endpoint_for_naming(fe.get_endpoint()):
                 datadog_monitor_generator.monitors_from_flask_endpoint(fe)
@@ -89,7 +87,7 @@ def main():
     )
 
     endpoint_to_monitors: dict[str, list[DatadogMonitor]] = \
-            _gen_and_monitors(fe_list)
+            _gen_monitors(fe_list)
 
     _write_tf_output(
             output_dir,

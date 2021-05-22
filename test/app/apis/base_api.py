@@ -5,7 +5,10 @@ import json
 import flask
 
 from flask_datadog.monitor import tag_route
-from flask_datadog.shared.ddog_constants import MonitorType, ThresholdType
+from flask_datadog.shared.ddog_constants import \
+        MonitorSpec, \
+        MonitorType, \
+        ThresholdType
 
 
 def add_endpoints(flask_app, jinja_env):
@@ -17,8 +20,11 @@ def add_endpoints(flask_app, jinja_env):
     @tag_route(
         monitors={
             MonitorType.ERROR_RATE_MONITOR: {
-                ThresholdType.CRITICAL_THRESHOLD: 0.1,
-                ThresholdType.WARNING_THRESHOLD: 0.05,
+                ThresholdType.CRITICAL_THRESHOLD: 0.8,
+                ThresholdType.CRITICAL_RECOVERY: 0.7,
+                ThresholdType.WARNING_THRESHOLD: 0.5,
+                ThresholdType.WARNING_RECOVERY: 0.4,
+                MonitorSpec.ALERT_PERIOD: '10m',
             },
         },
     )

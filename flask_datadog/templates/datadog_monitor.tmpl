@@ -7,16 +7,16 @@ resource "datadog_monitor" "{{monitor_name}}" {
   query = "{{monitor_query}}"
 
   monitor_thresholds {
-    {% if warning_threshold %}
+    {% if warning_threshold is not none %}
       warning = {{warning_threshold}}
     {% endif %}
-    {% if warning_recovery %}
+    {% if warning_recovery is not none %}
       warning_recovery = {{warning_recovery}}
     {% endif %}
-    {% if critical_threshold %}
+    {% if critical_threshold is not none %}
       critical = {{critical_threshold}}
     {% endif %}
-    {% if critical_recovery %}
+    {% if critical_recovery is not none %}
       critical_recovery = {{critical_recovery}}
     {% endif %}
   }

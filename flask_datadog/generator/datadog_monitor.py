@@ -4,7 +4,11 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from flask_datadog.generator import endpoint_util
-from flask_datadog.shared import ddog_constants
+from flask_datadog.shared.ddog_constants import MonitorSpec, MonitorType, ThresholdType
+
+
+class DatadogMonitorFormatException(Exception):
+    pass
 
 
 @dataclass(frozen=True)
@@ -20,9 +24,14 @@ class DatadogMonitor:
 
     endpoint_path: str
     method: str
-    monitor_type: ddog_constants.MonitorType
-    data_period: str
-    alert_thresholds: Optional[AlertThresholds] = None
+    monitor_type: MonitorType
+    mon_spec: dict
+
+    @property
+    def alert_period(self) -> str:
+        if not MonitorSpec.ALERT_PERIOD in self.mon_spec:
+            raise DatadogMonitorFormatException(f'{MonitorSpec.ALERT_PERIOD} required')
+        return self.mon_spec[MonitorSpec.ALERT_PERIOD]
 
     @property
     def name(self) -> str:
@@ -40,24 +49,28 @@ class DatadogMonitor:
         return f'{self.method}_{self.endpoint_path}'.lower()
 
     def get_alert_thresholds(self) -> AlertThresholds:
-        if self.alert_thresholds:
-            return self.alert_thresholds
-        return _make_default_threholds(self.monitor_type)
+        """Alert thresholds with defaults
+        """
+        critical_threshold: float = self.mon_spec.get(ThresholdType.CRITICAL_THRESHOLD, None)
+        critical_recovery: float = self.mon_spec.get(ThresholdType.CRITICAL_RECOVERY, None)
+        warning_threshold: float = self.mon_spec.get(ThresholdType.WARNING_THRESHOLD, None)
+        warning_recovery: float = self.mon_spec.get(ThresholdType.WARNING_RECOVERY, None)
 
+        if all(x is None for x in [
+            critical_recovery,
+            critical_threshold,
+            warning_recovery,
+            warning_threshold]
+            ):
+            critical_threshold = .1
+            critical_recovery = .08
+            warning_threshold = .05
+            warning_recovery = .03
 
-def _make_default_threholds(monitor_type: ddog_constants.MonitorType) -> AlertThresholds:
-    """Default alert thresholds for different monitor types
-    """
-    if monitor_type == ddog_constants.MonitorType.ERROR_RATE_MONITOR:
-        # Default error rate
-        # - critical if above 10%
-        # - warn if above 5%
         return AlertThresholds(
-            critical_threshold=0.10,
-            critical_recovery=None,
-            warning_threshold=0.05,
-            warning_recovery=None,
+            critical_threshold=critical_threshold,
+            critical_recovery=critical_recovery,
+            warning_threshold=warning_threshold,
+            warning_recovery=warning_recovery,
         )
-
-    raise Exception(f'No default threshold found for monitor type: {monitor_type}')
 

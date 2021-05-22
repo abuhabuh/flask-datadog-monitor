@@ -4,10 +4,10 @@ DONE
 - App and DDog agent running and sending metrics
 - ErrorRate monitor prototype working
 - flask-datadog package working and usable by test app
+- route tagging is working and carries through to TF outputs
 
 TODO
-- Try to read tagged routes in the tf_generator [DONE]
-  - Make tagging constants less verbose via library
+- better test harness --> compare against string template outputs
 
 # Issues
 
