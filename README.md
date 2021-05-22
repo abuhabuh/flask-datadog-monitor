@@ -8,6 +8,8 @@ DONE
 
 TODO
 - better test harness --> compare against string template outputs
+- "trigger when metric is <above/below> the threshold <in total | on average | etc.> ...
+- monitor types: high latency, throughput
 
 # Issues
 
