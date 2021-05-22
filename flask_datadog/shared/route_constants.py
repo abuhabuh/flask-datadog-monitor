@@ -1,17 +1,6 @@
 """Shared constants shared between functionalies (e.g., generator, route tagger)
 """
-import enum
-
-
-class MonitorType(enum.Enum):
-    ERROR_RATE_MONITOR = 1
-
-
-class ThresholdTypes(enum.Enum):
-    CRITICAL_THRESHOLD = 1
-    CRITICAL_RECOVERY = 2
-    WARNING_THRESHOLD = 3
-    WARNING_RECOVERY = 4
+from flask_datadog.shared import ddog_constants
 
 
 ROUTE_INFO_KEY = '__flask_ddog_route_info__'
@@ -19,20 +8,22 @@ ROUTE_INFO_KEY = '__flask_ddog_route_info__'
 
 ROUTE_SCHEMA = {
     'type': 'object',
+    'additionalProperties': False,
     'properties': {
-        MonitorType.ERROR_RATE_MONITOR.name: {
+        ddog_constants.MonitorType.ERROR_RATE_MONITOR: {
             'type': 'object',
+            'additionalProperties': False,
             'properties': {
-                ThresholdTypes.CRITICAL_THRESHOLD.name: {
+                ddog_constants.ThresholdType.CRITICAL_THRESHOLD: {
                     'type': 'number',
                 },
-                ThresholdTypes.CRITICAL_RECOVERY.name: {
+                ddog_constants.ThresholdType.CRITICAL_RECOVERY: {
                     'type': 'number',
                 },
-                ThresholdTypes.WARNING_THRESHOLD.name: {
+                ddog_constants.ThresholdType.WARNING_THRESHOLD: {
                     'type': 'number',
                 },
-                ThresholdTypes.WARNING_RECOVERY.name: {
+                ddog_constants.ThresholdType.WARNING_RECOVERY: {
                     'type': 'number',
                 },
             }

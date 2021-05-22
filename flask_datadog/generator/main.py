@@ -53,6 +53,9 @@ def _write_tf_output(
         service_env: str,
         ):
     for endpoint, monitors in endpoint_to_monitors.items():
+        if not monitors:
+            continue
+
         monitor: DatadogMonitor = monitors[0]
 
         tf_spec: str = tf_spec_generator.get_tf_spec(monitor, service_env, service_name)

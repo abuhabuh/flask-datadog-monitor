@@ -6,7 +6,8 @@ DONE
 - flask-datadog package working and usable by test app
 
 TODO
-- Try to read tagged routes in the tf_generator
+- Try to read tagged routes in the tf_generator [DONE]
+  - Make tagging constants less verbose via library
 
 # Issues
 
@@ -43,3 +44,6 @@ Running
   1. todo: need to make parser into an executable
 1. python monitor_generator.py ../test-app/app:app
 
+# Reference
+
+- Flask App Object API: https://tedboy.github.io/flask/interface_api.application_object.html

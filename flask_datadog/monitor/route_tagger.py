@@ -7,10 +7,11 @@ import jsonschema  # type: ignore
 from flask_datadog.shared import route_constants
 
 
-def _validate_tag(tag_spec: dict) -> bool:
-    print(f'tag_spec: {tag_spec}')
-    ret_val = jsonschema.validate(instance=tag_spec, schema=route_constants.ROUTE_SCHEMA)
-    print(f'validate returned {ret_val}')
+def validate_tag(tag_spec: dict) -> bool:
+    ret_val = jsonschema.validate(
+            instance=tag_spec,
+            schema=route_constants.ROUTE_SCHEMA,
+            )
     return True
 
 
@@ -25,6 +26,7 @@ def tag_route(**kwargs):
 
     """
 
+    # TODO: create a "gen_all_monitors" arg that specifies generating all monitors by default
     def decorator_fn(func):
 
         if 'monitors' in kwargs:
@@ -37,20 +39,4 @@ def tag_route(**kwargs):
         return wrapper
 
     return decorator_fn
-
-
-# TODO: remove this test code
-@tag_route(
-    monitors={
-        route_constants.MonitorType.ERROR_RATE_MONITOR.name: {
-            route_constants.ThresholdTypes.CRITICAL_THRESHOLD.name: 0.1,
-        },
-    },
-)
-def foo():
-    print('bar')
-foo()
-
-print(f'call with {foo.__dict__}')
-_validate_tag(foo.__dict__[route_constants.ROUTE_INFO_KEY])
 

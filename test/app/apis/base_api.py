@@ -5,7 +5,7 @@ import json
 import flask
 
 from flask_datadog.monitor import tag_route
-from flask_datadog.shared import route_constants
+from flask_datadog.shared.ddog_constants import MonitorType, ThresholdType
 
 
 def add_endpoints(flask_app, jinja_env):
@@ -16,8 +16,9 @@ def add_endpoints(flask_app, jinja_env):
 
     @tag_route(
         monitors={
-            route_constants.MonitorType.ERROR_RATE_MONITOR.name: {
-                route_constants.ThresholdTypes.CRITICAL_THRESHOLD.name: 0.1,
+            MonitorType.ERROR_RATE_MONITOR: {
+                ThresholdType.CRITICAL_THRESHOLD: 0.1,
+                ThresholdType.WARNING_THRESHOLD: 0.05,
             },
         },
     )
@@ -33,6 +34,6 @@ def add_endpoints(flask_app, jinja_env):
         }, indent=2), int(response_code)
 
     @flask_app.route('/health', methods=['GET'])
-    def get_health():
+    def get_health_baby():
         return json.dumps({'status': 'ok'}), http.HTTPStatus.OK
 

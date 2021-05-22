@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from flask_datadog.generator import endpoint_util
-from flask_datadog.shared.route_constants import MonitorType
+from flask_datadog.shared import ddog_constants
 
 
 @dataclass(frozen=True)
@@ -20,7 +20,7 @@ class DatadogMonitor:
 
     endpoint_path: str
     method: str
-    monitor_type: MonitorType
+    monitor_type: ddog_constants.MonitorType
     data_period: str
     alert_thresholds: Optional[AlertThresholds] = None
 
@@ -45,10 +45,10 @@ class DatadogMonitor:
         return _make_default_threholds(self.monitor_type)
 
 
-def _make_default_threholds(monitor_type: MonitorType) -> AlertThresholds:
+def _make_default_threholds(monitor_type: ddog_constants.MonitorType) -> AlertThresholds:
     """Default alert thresholds for different monitor types
     """
-    if monitor_type == MonitorType.ERROR_RATE_MONITOR:
+    if monitor_type == ddog_constants.MonitorType.ERROR_RATE_MONITOR:
         # Default error rate
         # - critical if above 10%
         # - warn if above 5%

@@ -4,16 +4,24 @@ import flask
 import werkzeug
 
 from flask_datadog.generator.flask_endpoint import FlaskEndpoint
+from flask_datadog.shared import route_constants
 
 
 def parse_endpoints(flask_app: flask.app.Flask) -> list[FlaskEndpoint]:
 
     fe_list = []
+
     for r in flask_app.url_map.iter_rules():
         if _is_default_endpoint(r):
             continue
+        # NOTE: flask_app.view_functions is a mapping of a route handler
+        # function's name (r.endpoint) to the actual function
+        specs: dict = \
+                flask_app.view_functions[r.endpoint].__dict__.get(
+                       route_constants.ROUTE_INFO_KEY, {})
         fe_list.append(FlaskEndpoint(
-            rule=r
+            rule=r,
+            monitor_specs=specs,
         ))
 
     return fe_list
