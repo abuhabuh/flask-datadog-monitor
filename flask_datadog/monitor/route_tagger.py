@@ -28,7 +28,6 @@ def monitor_route(monitors: Optional[dict] = None):
 
     """
 
-    # TODO: create a "gen_all_monitors" arg that specifies generating all monitors by default
     def decorator_fn(func):
 
         # tag_dict is the dictionary that is used to tag the route handler fn

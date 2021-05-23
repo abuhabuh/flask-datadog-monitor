@@ -40,7 +40,7 @@ class DatadogMonitor:
         cleaned_endpoint_path: str = endpoint_util.clean_endpoint_for_naming(
             self.endpoint_path,
         )
-        return f'{self.method}_{cleaned_endpoint_path}-{self.monitor_type.name}'
+        return f'{self.method}-{cleaned_endpoint_path}_{self.monitor_type.name}'
 
     @property
     def resource_name(self) -> str:

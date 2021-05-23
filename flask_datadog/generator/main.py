@@ -1,7 +1,6 @@
 """Main executable for generating DataDog monitors from flask endpoints
 """
 import importlib
-import json
 import os
 import sys
 
@@ -10,9 +9,6 @@ import sys
 import flask
 
 from flask_datadog.generator.flask_endpoint import FlaskEndpoint
-from flask_datadog.generator.datadog_monitor import DatadogMonitor
-from flask_datadog.generator import datadog_monitor_generator
-from flask_datadog.generator import endpoint_util
 from flask_datadog.generator import flask_endpoint_parser
 from flask_datadog.generator import tf_spec_generator
 

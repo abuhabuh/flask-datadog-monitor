@@ -24,12 +24,22 @@ def monitors_from_flask_endpoint(
     # TODO: only doing 1 method right now
     method: str = methods[0]
     if monitor_specs.get(ddog_constants.TAG_KEY_DEFAULT_MONITORS, None):
-        monitors.append(DatadogMonitor(
-            monitor_type=ddog_constants.MonitorType.ERROR_RATE_MONITOR,
-            endpoint_path=endpoint,
-            method=method,
-            mon_spec=dict(),
-            ))
+        monitors.append(
+            DatadogMonitor(
+                monitor_type=ddog_constants.MonitorType.ERROR_RATE_MONITOR,
+                endpoint_path=endpoint,
+                method=method,
+                mon_spec=dict(),
+            )
+        )
+        monitors.append(
+            DatadogMonitor(
+                monitor_type=ddog_constants.MonitorType.LATENCY_MONITOR,
+                endpoint_path=endpoint,
+                method=method,
+                mon_spec=dict(),
+            )
+        )
     else:
         monitor_map: dict = monitor_specs.get(ddog_constants.TAG_KEY_MONITORS, {})
         for mon_type, mon_spec in monitor_map.items():

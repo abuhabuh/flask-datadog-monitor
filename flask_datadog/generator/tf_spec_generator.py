@@ -7,6 +7,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from flask_datadog.generator import datadog_monitor_generator
 from flask_datadog.generator.datadog_monitor import AlertThresholds, DatadogMonitor
 from flask_datadog.generator.flask_endpoint import FlaskEndpoint
+from flask_datadog.shared import ddog_constants
 
 
 jinja_env = Environment(
@@ -15,6 +16,10 @@ jinja_env = Environment(
     ),
     autoescape=select_autoescape(['html', 'xml'])
 )
+
+
+class TFSpecGeneratorException(Exception):
+    pass
 
 
 def get_tf_fname(tf_file_prefix: str, endpoint: str) -> str:
@@ -50,6 +55,7 @@ def _get_monitor_spec(monitor: DatadogMonitor, env: str, service_name: str) -> s
     at: AlertThresholds = monitor.get_alert_thresholds()
 
     query_str: str = _get_tf_query(
+            monitor_type=monitor.monitor_type,
             env=env,
             service_name=service_name,
             endpoint_path=monitor.endpoint_path,
@@ -77,34 +83,47 @@ def _get_monitor_spec(monitor: DatadogMonitor, env: str, service_name: str) -> s
 
 
 def _get_service_monitor_name(service_name: str, monitor: DatadogMonitor) -> str:
-    return f'{service_name}-{monitor.name}'
+    return f'AUTOGEN_{service_name}_{monitor.name}'
 
 
 def _get_tf_query(
+        monitor_type: ddog_constants.MonitorType,
         env: str,
         service_name: str,
         endpoint_path: str,
         method: str,
         alert_period: str,
         threshold: float,
-):
+) -> str:
     """
     :param alert_period: e.g. '15m' for "15 minutes"
     """
     method = method.lower()
-    return f"""
+    resource_name: str = f'{method}_{endpoint_path}'
+    if monitor_type == ddog_constants.MonitorType.ERROR_RATE_MONITOR:
+        return f"""
             sum(last_{alert_period}): (
                sum:trace.flask.request.errors{{
                    env:{env},
                    service:{service_name},
-                   resource_name:{method}_{endpoint_path}
+                   resource_name:{resource_name}
                }}.as_count()
                /
                sum:trace.flask.request.hits{{
                    env:{env},
                    service:{service_name},
-                   resource_name:{method}_{endpoint_path}
+                   resource_name:{resource_name}
                }}.as_count()
             ) > {threshold}
         """.replace(' ', '').replace('\n', '')
 
+    if monitor_type == ddog_constants.MonitorType.LATENCY_MONITOR:
+        return f"""
+            avg(last_{alert_period}):avg:trace.flask.request{{
+                env:{env},
+                service:{service_name},
+                resource_name:{resource_name}
+            }} > {threshold}
+        """.replace(' ', '').replace('\n', '')
+
+    raise TFSpecGeneratorException(f'Monitor type ({monitor_type}) not supported.')

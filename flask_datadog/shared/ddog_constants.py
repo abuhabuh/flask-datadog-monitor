@@ -9,7 +9,7 @@ class MonitorSpec(enum.Enum):
 
 class MonitorType(enum.Enum):
     ERROR_RATE_MONITOR = 1
-    ALL_MONITORS = 2
+    LATENCY_MONITOR = 2
 
 
 class ThresholdType(enum.Enum):

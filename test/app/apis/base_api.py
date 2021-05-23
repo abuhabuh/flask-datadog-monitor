@@ -1,6 +1,9 @@
+"""Monitors are auto-gen'd for these API endpoints and sync'd to DataDog
+"""
 import datetime
 import http
 import json
+import time
 
 import flask
 
@@ -13,6 +16,7 @@ from flask_datadog.shared.ddog_constants import \
 
 def add_endpoints(flask_app, jinja_env):
 
+    @monitor_route()
     @flask_app.route('/', methods=['GET'])
     def get_root():
         return jinja_env.get_template('index.html').render(), http.HTTPStatus.OK
@@ -28,7 +32,7 @@ def add_endpoints(flask_app, jinja_env):
             },
         },
     )
-    @flask_app.route('/date', methods=['GET'])
+    @flask_app.route('/error', methods=['GET'])
     def get_date():
         response_code = flask.request.args.get('resp')
         if not response_code:
@@ -40,7 +44,12 @@ def add_endpoints(flask_app, jinja_env):
         }, indent=2), int(response_code)
 
     @monitor_route()
-    @flask_app.route('/health', methods=['GET'])
+    @flask_app.route('/latency', methods=['GET'])
     def get_health_baby():
-        return json.dumps({'status': 'ok'}), http.HTTPStatus.OK
+        sleep_sec = int(flask.request.args.get('sleep'))
+        if sleep_sec:
+            time.sleep(sleep_sec)
+        else:
+            sleep_sec = 0
 
+        return json.dumps({'status': 'ok', 'slept': sleep_sec}), http.HTTPStatus.OK
