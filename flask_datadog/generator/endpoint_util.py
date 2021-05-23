@@ -1,3 +1,6 @@
+"""Common util module for shared endpoint functions
+"""
+
 def clean_endpoint_for_naming(endpoint: str) -> str:
     """Convert endpoints like '/' and '/page/one' to 'root' and 'page_one'
     """
@@ -8,4 +11,3 @@ def clean_endpoint_for_naming(endpoint: str) -> str:
         if endpoint.startswith('_'):
             endpoint = endpoint[1:]
     return endpoint
-

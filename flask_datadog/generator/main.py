@@ -34,44 +34,6 @@ def _flask_app_from_location(module_name: str) -> flask.app.Flask:
     return getattr(flask_app_module, flask_app_obj)
 
 
-def _gen_monitors(
-        fe_list: list[FlaskEndpoint],
-        ) -> dict[str, list[DatadogMonitor]]:
-    return {
-            endpoint_util.clean_endpoint_for_naming(fe.get_endpoint()):
-                datadog_monitor_generator.monitors_from_flask_endpoint(fe)
-                    for fe in fe_list}
-
-
-def _write_tf_output(
-        output_dir: str,
-        tf_file_prefix: str,
-        endpoint_to_monitors: dict[str, list[DatadogMonitor]],
-        service_name: str,
-        service_env: str,
-        ):
-    for endpoint, monitors in endpoint_to_monitors.items():
-        if not monitors:
-            continue
-
-        monitor: DatadogMonitor = monitors[0]
-
-        tf_spec: str = tf_spec_generator.get_tf_spec(monitor, service_env, service_name)
-
-        output_file: str = _get_output_file_name(tf_file_prefix, output_dir, endpoint)
-        with open(output_file, 'w') as fp:
-            fp.write(tf_spec)
-
-        print(f'wrote output to {output_file}')
-
-
-def _get_output_file_name(prefix: str, output_dir: str, endpoint: str) -> str:
-    if output_dir.endswith('/'):
-        output_dir = output_dir[:-1]
-
-    return f'{output_dir}/{prefix}-{endpoint}.tf'
-
-
 def main():
     app_location: str = sys.argv[1]
     output_dir: str = sys.argv[2]
@@ -86,16 +48,12 @@ def main():
         flask_app,
     )
 
-    endpoint_to_monitors: dict[str, list[DatadogMonitor]] = \
-            _gen_monitors(fe_list)
-
-    _write_tf_output(
-            output_dir,
-            tf_file_prefix,
-            endpoint_to_monitors,
-            service_name,
-            service_env,
-            )
+    for fe in fe_list:
+        fname: str = tf_spec_generator.get_tf_fname(tf_file_prefix, fe.get_endpoint_fname())
+        contents: str = tf_spec_generator.get_tf_contents_from_flask_endpoint(
+                fe, service_env, service_name)
+        with open(f'{output_dir}/{fname}', 'w') as fp:
+            fp.write(contents)
 
 
 if __name__ == '__main__':

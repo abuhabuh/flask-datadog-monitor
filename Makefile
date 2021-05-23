@@ -1,9 +1,10 @@
-.PHONY: build, clean, test, local-all, sync-datadog, local-up, local-down
+.PHONY: build check clean test local-all sync-datadog local-up local-down
 
 # Variables
 APP_DIR = test/app
 TERRAFORM_DIR = test/terraform
 DOCKER_COMPOSE_FILE = $(APP_DIR)/docker-compose.yml
+PYTHON_EXEC = export PYTHONPATH=`pwd` && venv/bin/python
 
 
 # *** Main targets
@@ -28,7 +29,8 @@ local-down:
 
 check: clean-py-cache
 	mypy -p flask_datadog
-test: gen-tf
+test:
+	$(PYTHON_EXEC) test/integration/tf_output_generation_test.py
 
 # Deploy datadog configs
 sync-datadog: gen-tf
@@ -41,8 +43,7 @@ clean-py-cache:
 	find . | grep -E "(__pycache__|.mypy_cache|\.pyc|\.pyo$$)" | xargs rm -rf
 
 gen-tf:
-	export PYTHONPATH=`pwd` && \
-		python flask_datadog/generator/main.py $(APP_DIR)/app:app $(TERRAFORM_DIR)/auto-gen-monitors/ test
+	$(PYTHON_EXEC) flask_datadog/generator/main.py $(APP_DIR)/app:app $(TERRAFORM_DIR)/auto-gen-monitors test
 
 # Build all docker assets
 docker:

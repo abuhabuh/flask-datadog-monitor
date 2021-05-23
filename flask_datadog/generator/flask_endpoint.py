@@ -2,14 +2,16 @@
 """
 import json
 
-import werkzeug
+from werkzeug.routing import Rule
+
+from flask_datadog.generator import endpoint_util
 
 
 class FlaskEndpoint:
 
     def __init__(
             self,
-            rule: werkzeug.routing.Rule,
+            rule: Rule,
             monitor_specs: dict,
             ):
         self._rule = rule
@@ -18,6 +20,11 @@ class FlaskEndpoint:
 
     def get_endpoint(self) -> str:
         return self._rule.rule
+
+    def get_endpoint_fname(self) -> str:
+        """Convert endpoints like '/' and '/page/one' to 'root' and 'page_one'
+        """
+        return endpoint_util.clean_endpoint_for_naming(self.get_endpoint())
 
     def get_methods(self) -> list[str]:
         return list(_filter_methods(self._rule.methods))

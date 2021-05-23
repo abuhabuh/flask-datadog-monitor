@@ -17,8 +17,6 @@ def monitors_from_flask_endpoint(
     methods: list[str] = fe.get_methods()
     monitor_specs: dict = fe.get_specs()
 
-    print(f'*** mon from fe - {endpoint}: {monitor_specs}')
-
     route_tagger.validate_tag(monitor_specs)
 
     # TODO: only doing 1 method right now
