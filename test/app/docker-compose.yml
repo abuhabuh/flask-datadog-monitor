@@ -60,7 +60,7 @@ services:
       context: ../..
       dockerfile: test/app/Dockerfile
     # run the fake client continuous loop
-    entrypoint: ['python', 'fake_client.py']
+    entrypoint: ['./fake_client/fake_client_script.sh']
     volumes:
       - "../..:/var/www/src/"
     networks:

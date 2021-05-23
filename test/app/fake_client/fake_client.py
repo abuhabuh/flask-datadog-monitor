@@ -1,7 +1,6 @@
 """Fake client that polls different API endpoints
 """
 import logging
-import time
 
 import requests
 
@@ -9,7 +8,7 @@ import requests
 logging.basicConfig(level=logging.DEBUG)
 
 
-def start_polling():
+def run_requests():
     host = 'http://test-app:5000'
     paths = [
         '/',
@@ -20,15 +19,17 @@ def start_polling():
         '/latency?sleep=2',
     ]
 
-    while True:
-        time.sleep(5)
+    logging.info(f'*** Starting Request Batch ***')
 
-        logging.info(f'*** Starting Request Batch ***')
-        for p in paths:
-            req_url: str = f'{host}{p}'
-            r = requests.get(req_url)
-            logging.info(f'Response from {req_url}: {r.status_code}')
+    for p in paths:
+        req_url: str = f'{host}{p}'
+        r = requests.get(req_url)
+        logging.info(f'Response from {req_url}: {r.status_code}')
+
+    logging.info(f'--')
+    logging.info(f'--')
+    logging.info(f'--')
 
 
 if __name__ == '__main__':
-    start_polling()
+    run_requests()
