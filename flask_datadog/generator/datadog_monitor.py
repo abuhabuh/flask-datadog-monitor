@@ -1,6 +1,4 @@
-"""Represents a DataDog Monitor
-"""
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 from flask_datadog.generator import endpoint_util
@@ -27,8 +25,12 @@ class DatadogMonitor:
     monitor_type: MonitorType
     mon_spec: dict
 
+    DEFAULT_ALERT_PERIOD: str = '5m'
+
     @property
     def alert_period(self) -> str:
+        if self.is_default_monitor():
+            return DatadogMonitor.DEFAULT_ALERT_PERIOD
         if not MonitorSpec.ALERT_PERIOD in self.mon_spec:
             raise DatadogMonitorFormatException(f'{MonitorSpec.ALERT_PERIOD} required')
         return self.mon_spec[MonitorSpec.ALERT_PERIOD]
@@ -74,3 +76,6 @@ class DatadogMonitor:
             warning_recovery=warning_recovery,
         )
 
+    def is_default_monitor(self):
+        """A monitor is a default monitor if it has no specifications"""
+        return len(self.mon_spec) == 0

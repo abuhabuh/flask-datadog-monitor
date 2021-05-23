@@ -2,7 +2,7 @@
 """
 import flask
 
-from flask_datadog.monitor import tag_route
+from flask_datadog.monitor import monitor_route
 from flask_datadog.shared.ddog_constants import \
         MonitorSpec, \
         MonitorType, \
@@ -12,7 +12,7 @@ from flask_datadog.shared.ddog_constants import \
 flask_app = flask.Flask(__name__)
 
 
-@tag_route(
+@monitor_route(
     monitors={
         MonitorType.ERROR_RATE_MONITOR: {
             ThresholdType.CRITICAL_THRESHOLD: 0.8,

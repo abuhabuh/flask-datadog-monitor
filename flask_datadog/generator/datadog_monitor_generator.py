@@ -19,16 +19,26 @@ def monitors_from_flask_endpoint(
 
     route_tagger.validate_tag(monitor_specs)
 
+    # Generate monitors for endpoint
+    monitors = []
     # TODO: only doing 1 method right now
     method: str = methods[0]
-    monitors = []
-    for mon_type, mon_spec in monitor_specs.items():
+    if monitor_specs.get(ddog_constants.TAG_KEY_DEFAULT_MONITORS, None):
         monitors.append(DatadogMonitor(
-            monitor_type=ddog_constants.MonitorType(mon_type),
+            monitor_type=ddog_constants.MonitorType.ERROR_RATE_MONITOR,
             endpoint_path=endpoint,
             method=method,
-            mon_spec=mon_spec,
+            mon_spec=dict(),
             ))
+    else:
+        monitor_map: dict = monitor_specs.get(ddog_constants.TAG_KEY_MONITORS, {})
+        for mon_type, mon_spec in monitor_map.items():
+            monitors.append(DatadogMonitor(
+                monitor_type=ddog_constants.MonitorType(mon_type),
+                endpoint_path=endpoint,
+                method=method,
+                mon_spec=mon_spec,
+                ))
 
     return monitors
 

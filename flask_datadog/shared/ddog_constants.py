@@ -9,6 +9,7 @@ class MonitorSpec(enum.Enum):
 
 class MonitorType(enum.Enum):
     ERROR_RATE_MONITOR = 1
+    ALL_MONITORS = 2
 
 
 class ThresholdType(enum.Enum):
@@ -18,28 +19,42 @@ class ThresholdType(enum.Enum):
     WARNING_RECOVERY = 4
 
 
+TAG_KEY_DEFAULT_MONITORS = 'default_monitors'
+TAG_KEY_MONITORS = 'monitors'
+
+
 DDOG_MONITOR_SCHEMA = {
     'type': 'object',
     'additionalProperties': False,
     'properties': {
-        MonitorType.ERROR_RATE_MONITOR: {
+        TAG_KEY_DEFAULT_MONITORS: {
+            'type': 'boolean',
+            'enum': [True]
+        },
+        TAG_KEY_MONITORS: {
             'type': 'object',
             'additionalProperties': False,
             'properties': {
-                ThresholdType.CRITICAL_THRESHOLD: {
-                    'type': 'number',
-                },
-                ThresholdType.CRITICAL_RECOVERY: {
-                    'type': 'number',
-                },
-                ThresholdType.WARNING_THRESHOLD: {
-                    'type': 'number',
-                },
-                ThresholdType.WARNING_RECOVERY: {
-                    'type': 'number',
-                },
-                MonitorSpec.ALERT_PERIOD: {
-                    'type': 'string',
+                MonitorType.ERROR_RATE_MONITOR: {
+                    'type': 'object',
+                    'additionalProperties': False,
+                    'properties': {
+                        ThresholdType.CRITICAL_THRESHOLD: {
+                            'type': 'number',
+                        },
+                        ThresholdType.CRITICAL_RECOVERY: {
+                            'type': 'number',
+                        },
+                        ThresholdType.WARNING_THRESHOLD: {
+                            'type': 'number',
+                        },
+                        ThresholdType.WARNING_RECOVERY: {
+                            'type': 'number',
+                        },
+                        MonitorSpec.ALERT_PERIOD: {
+                            'type': 'string',
+                        },
+                    },
                 },
             },
         },

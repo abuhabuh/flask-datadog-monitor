@@ -4,7 +4,7 @@ import flask
 import werkzeug
 
 from flask_datadog.generator.flask_endpoint import FlaskEndpoint
-from flask_datadog.shared import route_constants
+from flask_datadog.shared import route_tagger_constants
 
 
 def parse_endpoints(flask_app: flask.app.Flask) -> list[FlaskEndpoint]:
@@ -18,7 +18,7 @@ def parse_endpoints(flask_app: flask.app.Flask) -> list[FlaskEndpoint]:
         # function's name (r.endpoint) to the actual function
         specs: dict = \
                 flask_app.view_functions[r.endpoint].__dict__.get(
-                       route_constants.ROUTE_INFO_KEY, {})
+                       route_tagger_constants.ROUTE_INFO_KEY, {})
         fe_list.append(FlaskEndpoint(
             rule=r,
             monitor_specs=specs,
