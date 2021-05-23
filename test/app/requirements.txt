@@ -6,3 +6,5 @@ ddtrace==0.48.3
 flask==1.1.4
 # Jinja for web templates
 Jinja2==2.11.3
+# Requests for http calls
+requests==2.25.1

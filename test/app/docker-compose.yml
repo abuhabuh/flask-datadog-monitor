@@ -53,5 +53,18 @@ services:
     networks:
       - primary
 
+  fake-client:
+    image: test-app
+    build:
+      # context is the root of flask-datadog project
+      context: ../..
+      dockerfile: test/app/Dockerfile
+    # run the fake client continuous loop
+    entrypoint: ['python', 'fake_client.py']
+    volumes:
+      - "../..:/var/www/src/"
+    networks:
+      - primary
+
 networks:
   primary:
