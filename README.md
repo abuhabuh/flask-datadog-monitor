@@ -7,6 +7,9 @@ DONE
 - route tagging is working and carries through to TF outputs
 
 TODO
+- Create an anomaly alert type
+- Threshold alert for different methods
+- Combine methods into a single alert
 - "trigger when metric is <above/below> the threshold <in total | on average | etc.> ...
 
 # Issues
