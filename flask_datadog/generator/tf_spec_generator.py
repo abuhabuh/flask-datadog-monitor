@@ -100,7 +100,7 @@ def _get_tf_query(
     """
     method = method.lower()
     resource_name: str = f'{method}_{endpoint_path}'
-    if monitor_type == ddog_constants.MonitorType.ERROR_RATE_MONITOR:
+    if monitor_type == ddog_constants.MonitorType.APM_ERROR_RATE_THRESHOLD:
         return f"""
             sum(last_{alert_period}): (
                sum:trace.flask.request.errors{{
@@ -117,7 +117,7 @@ def _get_tf_query(
             ) > {threshold}
         """.replace(' ', '').replace('\n', '')
 
-    if monitor_type == ddog_constants.MonitorType.LATENCY_MONITOR:
+    if monitor_type == ddog_constants.MonitorType.APM_LATENCY_THRESHOLD:
         return f"""
             avg(last_{alert_period}):avg:trace.flask.request{{
                 env:{env},

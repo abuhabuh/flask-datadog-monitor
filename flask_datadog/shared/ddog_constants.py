@@ -8,8 +8,8 @@ class MonitorSpec(enum.Enum):
 
 
 class MonitorType(enum.Enum):
-    ERROR_RATE_MONITOR = 1
-    LATENCY_MONITOR = 2
+    APM_ERROR_RATE_THRESHOLD = 1
+    APM_LATENCY_THRESHOLD = 2
 
 
 class ThresholdType(enum.Enum):
@@ -35,7 +35,7 @@ DDOG_MONITOR_SCHEMA = {
             'type': 'object',
             'additionalProperties': False,
             'properties': {
-                MonitorType.ERROR_RATE_MONITOR: {
+                MonitorType.APM_ERROR_RATE_THRESHOLD: {
                     'type': 'object',
                     'additionalProperties': False,
                     'properties': {

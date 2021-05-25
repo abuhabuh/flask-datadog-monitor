@@ -23,7 +23,7 @@ def add_endpoints(flask_app, jinja_env):
 
     @monitor_route(
         monitors={
-            MonitorType.ERROR_RATE_MONITOR: {
+            MonitorType.APM_ERROR_RATE_THRESHOLD: {
                 ThresholdType.CRITICAL_THRESHOLD: 0.8,
                 ThresholdType.CRITICAL_RECOVERY: 0.7,
                 ThresholdType.WARNING_THRESHOLD: 0.5,

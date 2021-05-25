@@ -26,7 +26,7 @@ def monitors_from_flask_endpoint(
     if monitor_specs.get(ddog_constants.TAG_KEY_DEFAULT_MONITORS, None):
         monitors.append(
             DatadogMonitor(
-                monitor_type=ddog_constants.MonitorType.ERROR_RATE_MONITOR,
+                monitor_type=ddog_constants.MonitorType.APM_ERROR_RATE_THRESHOLD,
                 endpoint_path=endpoint,
                 method=method,
                 mon_spec=dict(),
@@ -34,7 +34,7 @@ def monitors_from_flask_endpoint(
         )
         monitors.append(
             DatadogMonitor(
-                monitor_type=ddog_constants.MonitorType.LATENCY_MONITOR,
+                monitor_type=ddog_constants.MonitorType.APM_LATENCY_THRESHOLD,
                 endpoint_path=endpoint,
                 method=method,
                 mon_spec=dict(),

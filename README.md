@@ -11,6 +11,7 @@ TODO
 - Threshold alert for different methods
 - Combine methods into a single alert
 - "trigger when metric is <above/below> the threshold <in total | on average | etc.> ...
+- Create message for alerts
 
 # Issues
 
