@@ -1,5 +1,7 @@
-resource "datadog_monitor" "integration_test_service-GET_base_test_route-ERROR_RATE_MONITOR" {
-  name               = "integration_test_service-GET_base_test_route-ERROR_RATE_MONITOR"
+# NOTE: this resource is auto generated via flask-datadog
+
+resource "datadog_monitor" "AUTOGEN_integration_test_service_GET-base_test_route_ERROR_RATE_MONITOR" {
+  name               = "AUTOGEN_integration_test_service_GET-base_test_route_ERROR_RATE_MONITOR"
   type               = "metric alert"
   message            = ""
   escalation_message = ""
