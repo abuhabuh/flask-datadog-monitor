@@ -70,6 +70,7 @@ def _get_monitor_spec(monitor: DatadogMonitor, env: str, service_name: str) -> s
         resource_name=monitor.resource_name,
         monitor_name=service_monitor_name,
         monitor_name_pretty=service_monitor_name,
+        terraform_monitor_type=monitor.terraform_monitor_type,
         msg='',
         escalation_msg='',
         monitor_query=query_str,

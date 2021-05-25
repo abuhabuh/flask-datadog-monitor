@@ -19,6 +19,7 @@ class AlertThresholds:
 
 @dataclass(frozen=True)
 class DatadogMonitor:
+    """Represents a DataDog Monitor"""
 
     endpoint_path: str
     method: str
@@ -49,6 +50,17 @@ class DatadogMonitor:
         Used for tagging a monitor.
         """
         return f'{self.method}_{self.endpoint_path}'.lower()
+
+    @property
+    def terraform_monitor_type(self) -> str:
+        """Map the DataDog Monitor to the proper monitor type for Terraform specs.
+
+        Different monitor types: https://docs.datadoghq.com/api/latest/monitors/#create-a-monitor
+        """
+        if self.monitor_type in [MonitorType.APM_ERROR_RATE_THRESHOLD, MonitorType.APM_LATENCY_THRESHOLD]:
+            return 'query alert'
+        raise DatadogMonitorFormatException(
+            f'MonitorType [{self.monitor_type}] has no matching terraform monitor type string')
 
     def get_alert_thresholds(self) -> AlertThresholds:
         """Alert thresholds with defaults

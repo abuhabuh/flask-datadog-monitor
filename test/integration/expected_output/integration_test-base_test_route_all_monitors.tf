@@ -2,7 +2,7 @@
 
 resource "datadog_monitor" "AUTOGEN_integration_test_service_GET-base_test_route_all_monitors_APM_ERROR_RATE_THRESHOLD" {
   name               = "AUTOGEN_integration_test_service_GET-base_test_route_all_monitors_APM_ERROR_RATE_THRESHOLD"
-  type               = "metric alert"
+  type               = "query alert"
   message            = ""
   escalation_message = ""
 
@@ -38,7 +38,7 @@ resource "datadog_monitor" "AUTOGEN_integration_test_service_GET-base_test_route
 
 resource "datadog_monitor" "AUTOGEN_integration_test_service_GET-base_test_route_all_monitors_APM_LATENCY_THRESHOLD" {
   name               = "AUTOGEN_integration_test_service_GET-base_test_route_all_monitors_APM_LATENCY_THRESHOLD"
-  type               = "metric alert"
+  type               = "query alert"
   message            = ""
   escalation_message = ""
 

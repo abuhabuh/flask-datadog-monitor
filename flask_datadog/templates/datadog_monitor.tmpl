@@ -2,7 +2,7 @@
 
 resource "datadog_monitor" "{{monitor_name}}" {
   name               = "{{monitor_name_pretty}}"
-  type               = "metric alert"
+  type               = "{{terraform_monitor_type}}"
   message            = "{{msg}}"
   escalation_message = "{{escalation_msg}}"
 

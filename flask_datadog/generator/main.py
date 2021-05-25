@@ -1,6 +1,7 @@
 """Main executable for generating DataDog monitors from flask endpoints
 """
 import importlib
+import logging
 import os
 import sys
 
@@ -11,6 +12,9 @@ import flask
 from flask_datadog.generator.flask_endpoint import FlaskEndpoint
 from flask_datadog.generator import flask_endpoint_parser
 from flask_datadog.generator import tf_spec_generator
+
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 def _flask_app_from_location(module_name: str) -> flask.app.Flask:
@@ -31,6 +35,7 @@ def _flask_app_from_location(module_name: str) -> flask.app.Flask:
 
 
 def main():
+    logging.info(f'Started Terraform spec generation.')
     app_location: str = sys.argv[1]
     output_dir: str = sys.argv[2]
     tf_file_prefix: str = sys.argv[3]
@@ -50,6 +55,7 @@ def main():
                 fe, service_env, service_name)
         with open(f'{output_dir}/{fname}', 'w') as fp:
             fp.write(contents)
+        logging.info(f' > wrote output for {output_dir}/{fname}')
 
 
 if __name__ == '__main__':
