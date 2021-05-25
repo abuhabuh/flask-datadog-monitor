@@ -23,6 +23,20 @@ def _get_full_fname(fname: str) -> str:
     return f'{sys.path[0]}/{EXPECTED_OUTPUT_DIR}/{fname}'
 
 
+def _remove_fname(fname: str):
+    os.remove(_get_full_fname(fname))
+
+
+def _get_all_expected_output_files() -> list[str]:
+    """Return file names of all expected output test files"""
+    test_files = []
+    for fname in os.listdir(f'{sys.path[0]}/{EXPECTED_OUTPUT_DIR}'):
+        if fname.endswith('.tf'):
+            test_files.append(fname)
+
+    return test_files
+
+
 def _generate_test_results(flask_endpoint_list: list[FlaskEndpoint]) -> tuple[dict, dict]:
     """Generate terraform outputs for a list of flask endpoints
     """
@@ -57,6 +71,8 @@ def run_integration_test() -> bool:
 
     # 2. compare with actual output files
     if existing_outputs:
+        logging.info(f'')
+        logging.info(f'Comparing expected outputs...')
         for full_file_path, contents in existing_outputs.items():
             fname = full_file_path.split('/')[-1]
             with open(full_file_path, 'r') as fp:
@@ -76,16 +92,32 @@ def run_integration_test() -> bool:
                 if ans == 'y':
                     with open(full_file_path, 'w+') as fp:
                         fp.write(contents)
-                    print(f' > updated {fname}')
+                    logging.info(f' > Updated {fname}')
                 else:
                     test_passed = False
+        logging.info(f'Output check complete')
 
+    # 3. write new output files
     if new_outputs:
+        logging.info(f'')
+        logging.info(f'New endpoints present - writing expected new expected output files')
         for full_file_path, contents in new_outputs.items():
             fname = full_file_path.split('/')[-1]
             with open(full_file_path, 'w+') as fp:
                 fp.write(contents)
-                print(f'Wrote new expected output for {fname}')
+                logging.info(f' > Wrote new expected output for {fname}')
+
+    # 4. delete any output files that are orphaned and don't match test endpoints
+    #    this happens if we rename or delete a test endpoints
+    all_expected_fnames = _get_all_expected_output_files()
+    all_generated_fnames = [full_path.split('/')[-1] for full_path, _ in (existing_outputs | new_outputs).items()]
+    logging.info(f'')
+    logging.info(f'Deleting any old orphaned output files. This happens if we rename or delete a test endpoints')
+    for fname in all_expected_fnames:
+        if fname not in all_generated_fnames:
+            logging.info(f' > Removing output file that is no longer used: {fname}')
+            _remove_fname(fname)
+    logging.info(f'')
 
     return test_passed
 

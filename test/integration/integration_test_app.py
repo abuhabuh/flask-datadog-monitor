@@ -23,14 +23,27 @@ flask_app = flask.Flask(__name__)
         },
     },
 )
-@flask_app.route('/base_test_route', methods=['GET'])
-def base_test_route():
+@flask_app.route('/base_test', methods=['GET'])
+def base_test():
     """Test route. Return value is unused"""
     return 0
 
 
 @monitor_route()
-@flask_app.route('/base_test_route_all_monitors', methods=['GET'])
-def base_test_route_all_monitors():
+@flask_app.route('/base_test_all_monitors', methods=['GET'])
+def base_test_all_monitors():
     """Test route. Return value is unused"""
     return 0
+
+
+# @monitor_route(
+#     monitors={
+#         MonitorType.APM_ERROR_RATE_ANOMALY: {
+#
+#         },
+#     },
+# )
+# @flask_app.route('/apm_error_rate_anomaly', methods=['GET'])
+# def apm_error_rate_anomaly_route():
+#     """Test route. Return value is unused"""
+#     return 0

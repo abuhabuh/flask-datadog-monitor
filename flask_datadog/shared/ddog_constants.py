@@ -8,8 +8,14 @@ class MonitorSpec(enum.Enum):
 
 
 class MonitorType(enum.Enum):
-    APM_ERROR_RATE_THRESHOLD = 1
-    APM_LATENCY_THRESHOLD = 2
+    """Different monitor types supported.
+
+    Value of enums are used in generating terraform specs and should be kept constant if possible.
+    """
+    APM_ERROR_RATE_THRESHOLD = 'APM_ERROR_RATE_THRESHOLD'
+    APM_LATENCY_THRESHOLD = 'APM_LATENCY_THRESHOLD'
+
+    APM_ERROR_RATE_ANOMALY = 'APM_ERROR_RATE_ANOMALY'
 
 
 class ThresholdType(enum.Enum):
