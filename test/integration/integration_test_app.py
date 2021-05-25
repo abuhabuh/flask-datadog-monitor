@@ -28,3 +28,9 @@ def base_test_route():
     """Test route. Return value is unused"""
     return 0
 
+
+@monitor_route()
+@flask_app.route('/base_test_route_all_monitors', methods=['GET'])
+def base_test_route_all_monitors():
+    """Test route. Return value is unused"""
+    return 0
