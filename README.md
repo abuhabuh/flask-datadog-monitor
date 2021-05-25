@@ -7,9 +7,7 @@ DONE
 - route tagging is working and carries through to TF outputs
 
 TODO
-- Datadog test harness and directions
 - "trigger when metric is <above/below> the threshold <in total | on average | etc.> ...
-- monitor types: high latency, throughput
 
 # Issues
 

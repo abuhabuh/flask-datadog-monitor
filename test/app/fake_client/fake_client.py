@@ -13,9 +13,13 @@ def run_requests():
     paths = [
         '/',
         '/',
-        '/error?resp=500',
         '/error?resp=200',
-        '/latency?sleep=0',
+        '/error?resp=500',
+        '/error?resp=500',
+        '/latency?sleep=',  # error
+        '/latency?sleep=',
+        '/latency?sleep=',
+        '/latency?sleep=1',
         '/latency?sleep=2',
     ]
 
