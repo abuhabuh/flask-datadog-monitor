@@ -111,12 +111,14 @@ def run_integration_test() -> bool:
     #    this happens if we rename or delete a test endpoints
     all_expected_fnames = _get_all_expected_output_files()
     all_generated_fnames = [full_path.split('/')[-1] for full_path, _ in (existing_outputs | new_outputs).items()]
-    logging.info(f'')
-    logging.info(f'Deleting any old orphaned output files. This happens if we rename or delete a test endpoints')
-    for fname in all_expected_fnames:
-        if fname not in all_generated_fnames:
+    delete_fnames = [f for f in all_expected_fnames if f not in all_generated_fnames]
+    if delete_fnames:
+        logging.info(f'')
+        logging.info(f'Deleting any old orphaned output files. This happens if we rename or delete a test endpoints')
+        for fname in delete_fnames:
             logging.info(f' > Removing output file that is no longer used: {fname}')
             _remove_fname(fname)
+
     logging.info(f'')
 
     return test_passed

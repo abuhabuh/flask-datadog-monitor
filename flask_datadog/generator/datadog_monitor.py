@@ -38,9 +38,13 @@ class DatadogMonitor:
 
     @property
     def name(self) -> str:
+        """Return name of DataDog monitor name
+        """
         cleaned_endpoint_path: str = endpoint_util.clean_endpoint_for_naming(
             self.endpoint_path,
         )
+        # Use MonitorType.value because we can keep the enum value the same
+        # while we we maintain flexibility to refactor the enum name in the code
         return f'{self.method}-{cleaned_endpoint_path}_{self.monitor_type.value}'
 
     @property

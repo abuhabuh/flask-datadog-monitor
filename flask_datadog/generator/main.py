@@ -5,8 +5,6 @@ import logging
 import os
 import sys
 
-# TODO: flask is an important dependency -- need to test how this works with
-# different versions of flask
 import flask
 
 from flask_datadog.generator.flask_endpoint import FlaskEndpoint

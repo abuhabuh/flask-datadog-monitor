@@ -24,7 +24,7 @@ def monitor_route(monitors: Optional[dict] = None):
 
     @tag(monitors={})
     def foo():
-        print(f'bar')
+        pass
 
     """
 

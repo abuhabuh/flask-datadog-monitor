@@ -9,9 +9,11 @@ DONE
 TODO
 - Create an anomaly alert type
 - Threshold alert for different methods
+- Support multiple methods (REST) - only doing 1 method right now
 - Combine methods into a single alert
 - "trigger when metric is <above/below> the threshold <in total | on average | etc.> ...
 - Create message for alerts
+- Test with different versions of Flask
 
 # Issues
 
