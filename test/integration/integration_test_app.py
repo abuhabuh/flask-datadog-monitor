@@ -36,16 +36,17 @@ def base_test_all_monitors():
     return 0
 
 
-# @monitor_route(
-#     monitors={
-#         MonitorType.APM_ERROR_RATE_ANOMALY: {
-#             anomaly_deviation_direction = 'both'  # TODO: config --> above, below, both
-#             anomaly_num_deviations = 2  # TODO: config
-#             anomaly_rollup_interval_sec = 120  # TODO: config
-#         },
-#     },
-# )
-# @flask_app.route('/apm_error_rate_anomaly', methods=['GET'])
-# def apm_error_rate_anomaly_route():
-#     """Test route. Return value is unused"""
-#     return 0
+@monitor_route(
+    monitors={
+        MonitorType.APM_ERROR_RATE_ANOMALY: {
+            MonitorSpec.ANOMALY_DEVIATION_DIR: 'both',
+            MonitorSpec.ANOMALY_NUM_DEVIATIONS: 2,
+            MonitorSpec.ANOMALY_ROLLUP_INTERVAL_SEC: 120,
+            MonitorSpec.ALERT_PERIOD: '10m',
+        },
+    },
+)
+@flask_app.route('/apm_error_rate_anomaly', methods=['GET'])
+def apm_error_rate_anomaly_route():
+    """Test route. Return value is unused"""
+    return 0

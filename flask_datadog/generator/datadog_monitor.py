@@ -121,7 +121,7 @@ class DatadogMonitor:
                resource_name:{resource_name}
             """
         if self.monitor_type == MonitorType.APM_ERROR_RATE_THRESHOLD:
-            return f"""
+            query = f"""
                 sum(last_{self.alert_period}): (
                    sum:trace.flask.request.errors{{
                        {flask_req_filter}
@@ -131,21 +131,21 @@ class DatadogMonitor:
                        {flask_req_filter}
                    }}.as_count()
                 ) > {at.critical_threshold}
-            """.replace(' ', '').replace('\n', '')
+            """
 
-        if self.monitor_type == MonitorType.APM_LATENCY_THRESHOLD:
-            return f"""
+        elif self.monitor_type == MonitorType.APM_LATENCY_THRESHOLD:
+            query = f"""
                 avg(last_{self.alert_period}):avg:trace.flask.request{{
                        {flask_req_filter}
                 }} > {at.critical_threshold}
-            """.replace(' ', '').replace('\n', '')
+            """
 
-        if self.monitor_type == MonitorType.APM_ERROR_RATE_ANOMALY:
+        elif self.monitor_type == MonitorType.APM_ERROR_RATE_ANOMALY:
             # TODO: only basic supported for now -- other's are 'agile', 'robust'
             anomaly_algo = 'basic'
-            anomaly_deviation_direction = 'both'  # TODO: config --> above, below, both
-            anomaly_num_deviations = 2  # TODO: config
-            anomaly_rollup_interval_sec = 120  # TODO: config
+            anomaly_deviation_direction = 'both'
+            anomaly_num_deviations = 2
+            anomaly_rollup_interval_sec = 120
             rollup_to_avg_time_map = {
                 7600: '2w',
                 3600: '1w',
@@ -156,8 +156,7 @@ class DatadogMonitor:
                 60: '4h',
                 20: '1h',
             }
-            # TODO: turn query period into a multiple of alert period
-            return f"""
+            query = f"""
                 avg(last_{rollup_to_avg_time_map[anomaly_rollup_interval_sec]}):anomalies(
                     avg:trace.flask.request{{ {flask_req_filter} }},
                     '{anomaly_algo}',
@@ -169,4 +168,7 @@ class DatadogMonitor:
                 ) >= 1
             """
 
-        raise DatadogMonitorFormatException(f'Monitor type ({self.monitor_type}) not supported.')
+        else:
+            raise DatadogMonitorFormatException(f'Monitor type ({self.monitor_type}) not supported.')
+
+        return query.replace(' ', '').replace('\n', '')

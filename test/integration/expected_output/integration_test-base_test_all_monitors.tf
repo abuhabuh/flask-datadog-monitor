@@ -78,21 +78,7 @@ resource "datadog_monitor" "AUTOGEN_integration_test_service_GET-base_test_all_m
   message            = ""
   escalation_message = ""
 
-  query = "
-                avg(last_12h):anomalies(
-                    avg:trace.flask.request{ 
-               env:integration_test_env,
-               service:integration_test_service,
-               resource_name:get_/base_test_all_monitors
-             },
-                    'basic',
-                    2,
-                    direction='both',
-                    alert_window='last_5m',
-                    interval=120,
-                    count_default_zero='true'
-                ) >= 1
-            "
+  query = "avg(last_12h):anomalies(avg:trace.flask.request{env:integration_test_env,service:integration_test_service,resource_name:get_/base_test_all_monitors},'basic',2,direction='both',alert_window='last_5m',interval=120,count_default_zero='true')>=1"
 
   monitor_thresholds {
     

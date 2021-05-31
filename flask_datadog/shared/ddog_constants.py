@@ -25,12 +25,44 @@ class MonitorThresholdType(enum.Enum):
 class MonitorSpec(enum.Enum):
     ALERT_PERIOD = 1
 
+    ANOMALY_DEVIATION_DIR = 2
+    ANOMALY_NUM_DEVIATIONS = 3
+    ANOMALY_ROLLUP_INTERVAL_SEC = 4
+
 
 TAG_KEY_DEFAULT_MONITORS = 'default_monitors'
 TAG_KEY_MONITORS = 'monitors'
 
 
 DDOG_MONITOR_SCHEMA = {
+    # Base monitor specifications that are common to all monitors
+    'definitions': {
+        'base_monitor_properties': {
+            'type': 'object',
+            # additionalProperties has to be True because we are combining
+            # base schema with other attributes
+            'additionalProperties': True,
+            'properties': {
+                MonitorThresholdType.CRITICAL_THRESHOLD: {
+                    'type': 'number',
+                },
+                MonitorThresholdType.CRITICAL_RECOVERY: {
+                    'type': 'number',
+                },
+                MonitorThresholdType.WARNING_THRESHOLD: {
+                    'type': 'number',
+                },
+                MonitorThresholdType.WARNING_RECOVERY: {
+                    'type': 'number',
+                },
+                MonitorSpec.ALERT_PERIOD: {
+                    'type': 'string',
+                },
+            },
+        }
+    },
+
+    # Actual schema definitions
     'type': 'object',
     'additionalProperties': False,
     'properties': {
@@ -43,25 +75,34 @@ DDOG_MONITOR_SCHEMA = {
             'additionalProperties': False,
             'properties': {
                 MonitorType.APM_ERROR_RATE_THRESHOLD: {
-                    'type': 'object',
-                    'additionalProperties': False,
-                    'properties': {
-                        MonitorThresholdType.CRITICAL_THRESHOLD: {
-                            'type': 'number',
+                    'allOf': [
+                        {
+                            '$ref': '#/definitions/base_monitor_properties',
                         },
-                        MonitorThresholdType.CRITICAL_RECOVERY: {
-                            'type': 'number',
+                        {},
+                    ],
+                },
+                MonitorType.APM_ERROR_RATE_ANOMALY: {
+                    'allOf': [
+                        {
+                            '$ref': '#/definitions/base_monitor_properties',
                         },
-                        MonitorThresholdType.WARNING_THRESHOLD: {
-                            'type': 'number',
+                        {
+                            'type': 'object',
+                            'properties': {
+                                MonitorSpec.ANOMALY_DEVIATION_DIR: {
+                                    'type': 'string',
+                                    'enum': [ 'below', 'above', 'both', ],
+                                },
+                                MonitorSpec.ANOMALY_NUM_DEVIATIONS: {
+                                    'type': 'number',
+                                },
+                                MonitorSpec.ANOMALY_ROLLUP_INTERVAL_SEC: {
+                                    'type': 'number',
+                                },
+                            },
                         },
-                        MonitorThresholdType.WARNING_RECOVERY: {
-                            'type': 'number',
-                        },
-                        MonitorSpec.ALERT_PERIOD: {
-                            'type': 'string',
-                        },
-                    },
+                    ],
                 },
             },
         },
