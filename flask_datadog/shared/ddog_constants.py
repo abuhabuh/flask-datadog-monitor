@@ -3,10 +3,6 @@
 import enum
 
 
-class MonitorSpec(enum.Enum):
-    ALERT_PERIOD = 1
-
-
 class MonitorType(enum.Enum):
     """Different monitor types supported.
 
@@ -18,11 +14,15 @@ class MonitorType(enum.Enum):
     APM_ERROR_RATE_ANOMALY = 'APM_ERROR_RATE_ANOMALY'
 
 
-class ThresholdType(enum.Enum):
+class MonitorThresholdType(enum.Enum):
     CRITICAL_THRESHOLD = 1
     CRITICAL_RECOVERY = 2
     WARNING_THRESHOLD = 3
     WARNING_RECOVERY = 4
+
+
+class MonitorSpec(enum.Enum):
+    ALERT_PERIOD = 1
 
 
 TAG_KEY_DEFAULT_MONITORS = 'default_monitors'
@@ -45,16 +45,16 @@ DDOG_MONITOR_SCHEMA = {
                     'type': 'object',
                     'additionalProperties': False,
                     'properties': {
-                        ThresholdType.CRITICAL_THRESHOLD: {
+                        MonitorThresholdType.CRITICAL_THRESHOLD: {
                             'type': 'number',
                         },
-                        ThresholdType.CRITICAL_RECOVERY: {
+                        MonitorThresholdType.CRITICAL_RECOVERY: {
                             'type': 'number',
                         },
-                        ThresholdType.WARNING_THRESHOLD: {
+                        MonitorThresholdType.WARNING_THRESHOLD: {
                             'type': 'number',
                         },
-                        ThresholdType.WARNING_RECOVERY: {
+                        MonitorThresholdType.WARNING_RECOVERY: {
                             'type': 'number',
                         },
                         MonitorSpec.ALERT_PERIOD: {

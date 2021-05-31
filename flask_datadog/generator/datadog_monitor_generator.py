@@ -12,9 +12,11 @@ def monitors_from_flask_endpoint(
 ) -> list[DatadogMonitor]:
     """Generate a list of DatadogMonitor objects for a single flask endpoint.
     """
-    DEFAULT_MON_TYPES: list[ddog_constants.MonitorType] = [
-       ddog_constants.MonitorType.APM_ERROR_RATE_THRESHOLD,
-       ddog_constants.MonitorType.APM_LATENCY_THRESHOLD,
+    default_mon_types: list[ddog_constants.MonitorType] = [
+        ddog_constants.MonitorType.APM_ERROR_RATE_THRESHOLD,
+        ddog_constants.MonitorType.APM_LATENCY_THRESHOLD,
+        # TODO: Anomaly not finished
+        ddog_constants.MonitorType.APM_ERROR_RATE_ANOMALY,
     ]
 
     endpoint: str = fe.get_endpoint()
@@ -28,7 +30,7 @@ def monitors_from_flask_endpoint(
     method: str = methods[0]
     if monitor_specs.get(ddog_constants.TAG_KEY_DEFAULT_MONITORS, None):
         # If generating all default monitors, add all monitors in default list
-        for mon_type in DEFAULT_MON_TYPES:
+        for mon_type in default_mon_types:
             monitors.append(
                 DatadogMonitor(
                     monitor_type=mon_type,

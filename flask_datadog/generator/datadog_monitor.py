@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from flask_datadog.generator import endpoint_util
-from flask_datadog.shared.ddog_constants import MonitorSpec, MonitorType, ThresholdType
+from flask_datadog.shared.ddog_constants import MonitorSpec, MonitorType, MonitorThresholdType
 
 
 class DatadogMonitorFormatException(Exception):
@@ -61,7 +61,11 @@ class DatadogMonitor:
 
         Different monitor types: https://docs.datadoghq.com/api/latest/monitors/#create-a-monitor
         """
-        if self.monitor_type in [MonitorType.APM_ERROR_RATE_THRESHOLD, MonitorType.APM_LATENCY_THRESHOLD]:
+        if self.monitor_type in [
+                MonitorType.APM_ERROR_RATE_THRESHOLD,
+                MonitorType.APM_LATENCY_THRESHOLD,
+                MonitorType.APM_ERROR_RATE_ANOMALY,
+        ]:
             return 'query alert'
         raise DatadogMonitorFormatException(
             f'MonitorType [{self.monitor_type}] has no matching terraform monitor type string')
@@ -69,10 +73,10 @@ class DatadogMonitor:
     def get_alert_thresholds(self) -> AlertThresholds:
         """Alert thresholds with defaults
         """
-        critical_threshold: float = self.mon_spec.get(ThresholdType.CRITICAL_THRESHOLD, None)
-        critical_recovery: float = self.mon_spec.get(ThresholdType.CRITICAL_RECOVERY, None)
-        warning_threshold: float = self.mon_spec.get(ThresholdType.WARNING_THRESHOLD, None)
-        warning_recovery: float = self.mon_spec.get(ThresholdType.WARNING_RECOVERY, None)
+        critical_threshold: float = self.mon_spec.get(MonitorThresholdType.CRITICAL_THRESHOLD, None)
+        critical_recovery: float = self.mon_spec.get(MonitorThresholdType.CRITICAL_RECOVERY, None)
+        warning_threshold: float = self.mon_spec.get(MonitorThresholdType.WARNING_THRESHOLD, None)
+        warning_recovery: float = self.mon_spec.get(MonitorThresholdType.WARNING_RECOVERY, None)
 
         if all(x is None for x in [
             critical_recovery,
@@ -95,3 +99,64 @@ class DatadogMonitor:
     def is_default_monitor(self):
         """A monitor is a default monitor if it has no specifications"""
         return len(self.mon_spec) == 0
+
+
+    def get_query_str(
+        self,
+        env: str,
+        service_name: str,
+    ) -> str:
+        """
+        :param env: alert env (e.g., 'staging', 'prod')
+        :param service_name: name of service (e.g., 'authentication_service')
+        """
+
+        at: AlertThresholds = self.get_alert_thresholds()
+
+        resource_name: str = f'{self.method.lower()}_{self.endpoint_path}'
+        # flask_req_filter is the common filter to apply to flask request traces
+        flask_req_filter: str = f"""
+               env:{env},
+               service:{service_name},
+               resource_name:{resource_name}
+            """
+        if self.monitor_type == MonitorType.APM_ERROR_RATE_THRESHOLD:
+            return f"""
+                sum(last_{self.alert_period}): (
+                   sum:trace.flask.request.errors{{
+                       {flask_req_filter}
+                   }}.as_count()
+                   /
+                   sum:trace.flask.request.hits{{
+                       {flask_req_filter}
+                   }}.as_count()
+                ) > {at.critical_threshold}
+            """.replace(' ', '').replace('\n', '')
+
+        if self.monitor_type == MonitorType.APM_LATENCY_THRESHOLD:
+            return f"""
+                avg(last_{self.alert_period}):avg:trace.flask.request{{
+                       {flask_req_filter}
+                }} > {at.critical_threshold}
+            """.replace(' ', '').replace('\n', '')
+
+        if self.monitor_type == MonitorType.APM_ERROR_RATE_ANOMALY:
+            # TODO: only basic supported for now -- other's are 'agile', 'robust'
+            anomaly_algo = 'basic'
+            anomaly_deviation_direction = 'both'  # TODO: config --> above, below, both
+            anomaly_num_deviations = 2  # TODO: config
+            anomaly_rollup_interval_sec = 120  # TODO: config
+            # TODO: turn query period into a multiple of alert period
+            return f"""
+                avg(last_4h):anomalies(
+                    avg:trace.flask.request{{ {flask_req_filter} }},
+                    '{anomaly_algo}',
+                    {anomaly_num_deviations},
+                    direction='{anomaly_deviation_direction}',
+                    alert_window='last_{self.alert_period}',
+                    interval={anomaly_rollup_interval_sec},
+                    count_default_zero='true'
+                ) >= 1
+            """
+
+        raise DatadogMonitorFormatException(f'Monitor type ({self.monitor_type}) not supported.')

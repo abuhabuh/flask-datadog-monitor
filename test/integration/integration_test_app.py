@@ -6,7 +6,7 @@ from flask_datadog.monitor import monitor_route
 from flask_datadog.shared.ddog_constants import \
         MonitorSpec, \
         MonitorType, \
-        ThresholdType
+        MonitorThresholdType
 
 
 flask_app = flask.Flask(__name__)
@@ -15,10 +15,10 @@ flask_app = flask.Flask(__name__)
 @monitor_route(
     monitors={
         MonitorType.APM_ERROR_RATE_THRESHOLD: {
-            ThresholdType.CRITICAL_THRESHOLD: 0.8,
-            ThresholdType.CRITICAL_RECOVERY: 0.7,
-            ThresholdType.WARNING_THRESHOLD: 0.5,
-            ThresholdType.WARNING_RECOVERY: 0.3,
+            MonitorThresholdType.CRITICAL_THRESHOLD: 0.8,
+            MonitorThresholdType.CRITICAL_RECOVERY: 0.7,
+            MonitorThresholdType.WARNING_THRESHOLD: 0.5,
+            MonitorThresholdType.WARNING_RECOVERY: 0.3,
             MonitorSpec.ALERT_PERIOD: '10m',
         },
     },
