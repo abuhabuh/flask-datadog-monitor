@@ -126,7 +126,7 @@ def run_integration_test() -> bool:
 
 if __name__ == '__main__':
     if run_integration_test():
-        logging.info(f'Integration test passed')
+        logging.info(f'Integration test passed. Test outputs in {_get_full_fname(".")}')
         sys.exit(0)
     logging.info(f'Integration test failed')
     sys.exit(1)
