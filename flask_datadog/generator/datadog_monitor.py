@@ -146,9 +146,19 @@ class DatadogMonitor:
             anomaly_deviation_direction = 'both'  # TODO: config --> above, below, both
             anomaly_num_deviations = 2  # TODO: config
             anomaly_rollup_interval_sec = 120  # TODO: config
+            rollup_to_avg_time_map = {
+                7600: '2w',
+                3600: '1w',
+                1800: '1w',
+                600: '2d',
+                300: '1d',
+                120: '12h',
+                60: '4h',
+                20: '1h',
+            }
             # TODO: turn query period into a multiple of alert period
             return f"""
-                avg(last_4h):anomalies(
+                avg(last_{rollup_to_avg_time_map[anomaly_rollup_interval_sec]}):anomalies(
                     avg:trace.flask.request{{ {flask_req_filter} }},
                     '{anomaly_algo}',
                     {anomaly_num_deviations},

@@ -79,7 +79,7 @@ resource "datadog_monitor" "AUTOGEN_integration_test_service_GET-base_test_all_m
   escalation_message = ""
 
   query = "
-                avg(last_4h):anomalies(
+                avg(last_12h):anomalies(
                     avg:trace.flask.request{ 
                env:integration_test_env,
                service:integration_test_service,

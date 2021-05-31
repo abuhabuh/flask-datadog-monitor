@@ -8,9 +8,10 @@ class MonitorType(enum.Enum):
 
     Value of enums are used in generating terraform specs and should be kept constant if possible.
     """
+    # Thresholds
     APM_ERROR_RATE_THRESHOLD = 'APM_ERROR_RATE_THRESHOLD'
     APM_LATENCY_THRESHOLD = 'APM_LATENCY_THRESHOLD'
-
+    # Anomalies
     APM_ERROR_RATE_ANOMALY = 'APM_ERROR_RATE_ANOMALY'
 
 

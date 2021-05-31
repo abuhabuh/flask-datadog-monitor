@@ -39,7 +39,9 @@ def base_test_all_monitors():
 # @monitor_route(
 #     monitors={
 #         MonitorType.APM_ERROR_RATE_ANOMALY: {
-#
+#             anomaly_deviation_direction = 'both'  # TODO: config --> above, below, both
+#             anomaly_num_deviations = 2  # TODO: config
+#             anomaly_rollup_interval_sec = 120  # TODO: config
 #         },
 #     },
 # )
