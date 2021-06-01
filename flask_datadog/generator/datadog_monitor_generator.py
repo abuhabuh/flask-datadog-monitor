@@ -15,8 +15,6 @@ def monitors_from_flask_endpoint(
     default_mon_types: list[ddog_constants.MonitorType] = [
         ddog_constants.MonitorType.APM_ERROR_RATE_THRESHOLD,
         ddog_constants.MonitorType.APM_LATENCY_THRESHOLD,
-        # TODO: Anomaly not finished
-        ddog_constants.MonitorType.APM_ERROR_RATE_ANOMALY,
     ]
 
     endpoint: str = fe.get_endpoint()

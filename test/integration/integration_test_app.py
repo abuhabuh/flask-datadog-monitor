@@ -39,6 +39,7 @@ def base_test_all_monitors():
 @monitor_route(
     monitors={
         MonitorType.APM_ERROR_RATE_ANOMALY: {
+            MonitorThresholdType.CRITICAL_THRESHOLD: 0.3,
             MonitorSpec.ANOMALY_DEVIATION_DIR: 'both',
             MonitorSpec.ANOMALY_NUM_DEVIATIONS: 2,
             MonitorSpec.ANOMALY_ROLLUP_INTERVAL_SEC: 120,

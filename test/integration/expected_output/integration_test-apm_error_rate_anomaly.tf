@@ -6,20 +6,14 @@ resource "datadog_monitor" "AUTOGEN_integration_test_service_GET-apm_error_rate_
   message            = ""
   escalation_message = ""
 
-  query = "avg(last_12h):anomalies(avg:trace.flask.request{env:integration_test_env,service:integration_test_service,resource_name:get_/apm_error_rate_anomaly},'basic',2,direction='both',alert_window='last_10m',interval=120,count_default_zero='true')>=1"
+  query = "avg(last_12h):anomalies(avg:trace.flask.request{env:integration_test_env,service:integration_test_service,resource_name:get_/apm_error_rate_anomaly},'basic',2,direction='both',alert_window='last_10m',interval=120,count_default_zero='true')>=0.3"
 
   monitor_thresholds {
     
-      warning = 0.05
     
     
-      warning_recovery = 0.03
+      critical = 0.3
     
-    
-      critical = 0.1
-    
-    
-      critical_recovery = 0.08
     
   }
 

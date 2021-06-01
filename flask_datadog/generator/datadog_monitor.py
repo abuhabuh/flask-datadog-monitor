@@ -27,6 +27,18 @@ class DatadogMonitor:
     mon_spec: dict
 
     DEFAULT_ALERT_PERIOD: str = '5m'
+    # For anomaly monitors: mapping of rollup intervals for aggregation to the
+    # avg() time period for the anomaly query
+    ROLLUP_TO_AVG_TIME_MAP = {
+        7600: '2w',
+        3600: '1w',
+        1800: '1w',
+        600: '2d',
+        300: '1d',
+        120: '12h',
+        60: '4h',
+        20: '1h',
+    }
 
     @property
     def alert_period(self) -> str:
@@ -141,23 +153,17 @@ class DatadogMonitor:
             """
 
         elif self.monitor_type == MonitorType.APM_ERROR_RATE_ANOMALY:
-            # TODO: only basic supported for now -- other's are 'agile', 'robust'
+            # TODO: only basic supported for now -- other's are 'agile',
+            #   'robust' and have more associated configs
             anomaly_algo = 'basic'
-            anomaly_deviation_direction = 'both'
-            anomaly_num_deviations = 2
-            anomaly_rollup_interval_sec = 120
-            rollup_to_avg_time_map = {
-                7600: '2w',
-                3600: '1w',
-                1800: '1w',
-                600: '2d',
-                300: '1d',
-                120: '12h',
-                60: '4h',
-                20: '1h',
-            }
+            anomaly_deviation_direction = self.mon_spec[MonitorSpec.ANOMALY_DEVIATION_DIR]
+            anomaly_num_deviations = self.mon_spec[MonitorSpec.ANOMALY_NUM_DEVIATIONS]
+            anomaly_rollup_interval_sec = self.mon_spec[MonitorSpec.ANOMALY_ROLLUP_INTERVAL_SEC]
+            if anomaly_rollup_interval_sec not in DatadogMonitor.ROLLUP_TO_AVG_TIME_MAP:
+                raise DatadogMonitorFormatException(f'Rollup interval ({anomaly_rollup_interval_sec}) not supported.')
+
             query = f"""
-                avg(last_{rollup_to_avg_time_map[anomaly_rollup_interval_sec]}):anomalies(
+                avg(last_{DatadogMonitor.ROLLUP_TO_AVG_TIME_MAP[anomaly_rollup_interval_sec]}):anomalies(
                     avg:trace.flask.request{{ {flask_req_filter} }},
                     '{anomaly_algo}',
                     {anomaly_num_deviations},
@@ -165,7 +171,7 @@ class DatadogMonitor:
                     alert_window='last_{self.alert_period}',
                     interval={anomaly_rollup_interval_sec},
                     count_default_zero='true'
-                ) >= 1
+                ) >= {at.critical_threshold}
             """
 
         else:

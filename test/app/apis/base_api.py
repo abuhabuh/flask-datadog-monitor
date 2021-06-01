@@ -30,6 +30,13 @@ def add_endpoints(flask_app, jinja_env):
                 MonitorThresholdType.WARNING_RECOVERY: 0.4,
                 MonitorSpec.ALERT_PERIOD: '10m',
             },
+            MonitorType.APM_ERROR_RATE_ANOMALY: {
+                MonitorThresholdType.CRITICAL_THRESHOLD: 0.8,
+                MonitorSpec.ANOMALY_DEVIATION_DIR: 'above',
+                MonitorSpec.ANOMALY_NUM_DEVIATIONS: 2,
+                MonitorSpec.ANOMALY_ROLLUP_INTERVAL_SEC: 120,
+                MonitorSpec.ALERT_PERIOD: '10m',
+            },
         },
     )
     @flask_app.route('/error', methods=['GET'])
