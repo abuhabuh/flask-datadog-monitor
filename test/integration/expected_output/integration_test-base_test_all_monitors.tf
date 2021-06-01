@@ -23,6 +23,8 @@ resource "datadog_monitor" "AUTOGEN_integration_test_service_GET-base_test_all_m
     
   }
 
+  
+
   include_tags = true
 
   tags = [
@@ -58,6 +60,8 @@ resource "datadog_monitor" "AUTOGEN_integration_test_service_GET-base_test_all_m
       critical_recovery = 0.08
     
   }
+
+  
 
   include_tags = true
 

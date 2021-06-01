@@ -108,10 +108,17 @@ class DatadogMonitor:
             warning_recovery=warning_recovery,
         )
 
-    def is_default_monitor(self):
-        """A monitor is a default monitor if it has no specifications"""
-        return len(self.mon_spec) == 0
+    def get_anomaly_threshold_windows(self) -> dict[str, str]:
+        """Return anomaly monitor threshold windows.
 
+        Threshold windows match the alert_window.
+        """
+        if self.is_anomaly_monitor():
+            return  {
+                'recovery_window': f'last_{self.alert_period}',
+                'trigger_window': f'last_{self.alert_period}',
+            }
+        return {}
 
     def get_query_str(
         self,
@@ -164,7 +171,15 @@ class DatadogMonitor:
 
             query = f"""
                 avg(last_{DatadogMonitor.ROLLUP_TO_AVG_TIME_MAP[anomaly_rollup_interval_sec]}):anomalies(
-                    avg:trace.flask.request{{ {flask_req_filter} }},
+                
+                    sum:trace.flask.request.errors{{
+                        {flask_req_filter}
+                    }}.as_count()
+                    /
+                    sum:trace.flask.request.hits{{
+                        {flask_req_filter}
+                    }}.as_count(),
+                    
                     '{anomaly_algo}',
                     {anomaly_num_deviations},
                     direction='{anomaly_deviation_direction}',
@@ -178,3 +193,12 @@ class DatadogMonitor:
             raise DatadogMonitorFormatException(f'Monitor type ({self.monitor_type}) not supported.')
 
         return query.replace(' ', '').replace('\n', '')
+
+    def is_anomaly_monitor(self) -> bool:
+        """Return whether or not this is an anomaly monitor
+        """
+        return self.monitor_type in MonitorType.anomaly_monitors()
+
+    def is_default_monitor(self) -> bool:
+        """A monitor is a default monitor if it has no specifications"""
+        return len(self.mon_spec) == 0

@@ -7,9 +7,8 @@ DONE
 - route tagging is working and carries through to TF outputs
 
 TODO
-- Create an anomaly monitor type
-  - CONFINE different monitor type attributes within DatadogMonitor object
-    Then don't worry about finishing the Anomaly monitor
+- Review anomaly work and general structure
+- Test anomaly alert working
 - Threshold alert for different methods
 - Support multiple methods (REST) - only doing 1 method right now
 - Combine methods into a single alert

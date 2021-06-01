@@ -23,6 +23,8 @@ resource "datadog_monitor" "AUTOGEN_integration_test_service_GET-base_test_APM_E
     
   }
 
+  
+
   include_tags = true
 
   tags = [

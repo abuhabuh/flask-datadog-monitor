@@ -6,5 +6,4 @@
 while :
 do
     python fake_client/fake_client.py
-    sleep 5
 done

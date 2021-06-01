@@ -14,6 +14,12 @@ class MonitorType(enum.Enum):
     # Anomalies
     APM_ERROR_RATE_ANOMALY = 'APM_ERROR_RATE_ANOMALY'
 
+    @staticmethod
+    def anomaly_monitors() -> list['MonitorType']:
+        return [
+            MonitorType.APM_ERROR_RATE_ANOMALY,
+        ]
+
 
 class MonitorThresholdType(enum.Enum):
     CRITICAL_THRESHOLD = 1

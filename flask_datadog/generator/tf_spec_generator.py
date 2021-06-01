@@ -1,5 +1,6 @@
 """Module for generating Terraform monitor specifications
 """
+import logging
 import pathlib
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -49,6 +50,9 @@ def _get_monitor_spec(monitor: DatadogMonitor, env: str, service_name: str) -> s
     service_monitor_name: str = _get_service_monitor_name(service_name, monitor)
     at: AlertThresholds = monitor.get_alert_thresholds()
 
+    logging.info(f'monitor type: {monitor.monitor_type}')
+    logging.info(f'   > windows: {monitor.get_anomaly_threshold_windows()}')
+
     spec_str: str = jinja_env.get_template('datadog_monitor.tmpl').render(
         service_name=service_name,
         env=env,
@@ -63,6 +67,7 @@ def _get_monitor_spec(monitor: DatadogMonitor, env: str, service_name: str) -> s
         critical_recovery=at.critical_recovery,
         warning_threshold=at.warning_threshold,
         warning_recovery=at.warning_recovery,
+        anomaly_threshold_windows=monitor.get_anomaly_threshold_windows(),
     )
 
     return spec_str

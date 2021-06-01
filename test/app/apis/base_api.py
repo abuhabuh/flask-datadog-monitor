@@ -40,7 +40,7 @@ def add_endpoints(flask_app, jinja_env):
         },
     )
     @flask_app.route('/error', methods=['GET'])
-    def get_date():
+    def get_error():
         response_code = flask.request.args.get('resp')
         if not response_code:
             response_code = http.HTTPStatus.OK
@@ -52,7 +52,7 @@ def add_endpoints(flask_app, jinja_env):
 
     @monitor_route()
     @flask_app.route('/latency', methods=['GET'])
-    def get_health_baby():
+    def get_latency():
         sleep_sec = int(flask.request.args.get('sleep'))
         if sleep_sec:
             time.sleep(sleep_sec)

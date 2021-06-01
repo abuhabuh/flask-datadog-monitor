@@ -1,6 +1,8 @@
 """Fake client that polls different API endpoints
 """
+import datetime
 import logging
+import time
 
 import requests
 
@@ -33,6 +35,13 @@ def run_requests():
     logging.info(f'--')
     logging.info(f'--')
     logging.info(f'--')
+
+    sleep_sec = 60
+    logging.info(f'>>>>>>> sleeping for {sleep_sec}s at {datetime.datetime.now()}')
+    logging.info(f'...')
+    logging.info(f'...')
+    logging.info(f'...')
+    time.sleep(sleep_sec)
 
 
 if __name__ == '__main__':
