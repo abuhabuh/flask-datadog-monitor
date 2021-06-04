@@ -7,13 +7,12 @@ DONE
 - route tagging is working and carries through to TF outputs
 
 TODO
-- Review anomaly work and general structure
-- Test anomaly alert working
+- Create message for alerts
 - Threshold alert for different methods
 - Support multiple methods (REST) - only doing 1 method right now
 - Combine methods into a single alert
 - "trigger when metric is <above/below> the threshold <in total | on average | etc.> ...
-- Create message for alerts
+- Test anomaly alert working
 - Test with different versions of Flask
 
 # Issues

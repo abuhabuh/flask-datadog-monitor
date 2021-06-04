@@ -20,6 +20,9 @@ flask_app = flask.Flask(__name__)
             MonitorThresholdType.WARNING_THRESHOLD: 0.5,
             MonitorThresholdType.WARNING_RECOVERY: 0.3,
             MonitorSpec.ALERT_PERIOD: '10m',
+            MonitorSpec.MSG: f"""
+                /base_test error threshold of 0.8 reached
+            """,
         },
     },
 )

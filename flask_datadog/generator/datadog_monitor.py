@@ -21,9 +21,12 @@ class AlertThresholds:
 class DatadogMonitor:
     """Represents a DataDog Monitor"""
 
+    # endpoint_path example: /base_test
     endpoint_path: str
+    # method example: GET
     method: str
     monitor_type: MonitorType
+    # mon_spec: dictionary of monitor specifications
     mon_spec: dict
 
     DEFAULT_ALERT_PERIOD: str = '5m'
@@ -81,6 +84,21 @@ class DatadogMonitor:
             return 'query alert'
         raise DatadogMonitorFormatException(
             f'MonitorType [{self.monitor_type}] has no matching terraform monitor type string')
+
+    def get_alert_escalation_msg(self) -> str:
+        """Return escalation message
+
+        TODO: not sure where escalation msg is applicable
+        """
+        return 'Alert escalated'
+
+    def get_alert_msg(self) -> str:
+        """Return alert msg for monitor
+        """
+        if self.mon_spec.get(MonitorSpec.MSG, ''):
+            return ' '.join(self.mon_spec[MonitorSpec.MSG].split())
+
+        return f"""{self.monitor_type.value} triggered."""
 
     def get_alert_thresholds(self) -> AlertThresholds:
         """Alert thresholds with defaults
@@ -192,7 +210,7 @@ class DatadogMonitor:
         else:
             raise DatadogMonitorFormatException(f'Monitor type ({self.monitor_type}) not supported.')
 
-        return query.replace(' ', '').replace('\n', '')
+        return ' '.join(query.split())
 
     def is_anomaly_monitor(self) -> bool:
         """Return whether or not this is an anomaly monitor

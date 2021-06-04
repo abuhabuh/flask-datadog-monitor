@@ -30,10 +30,11 @@ class MonitorThresholdType(enum.Enum):
 
 class MonitorSpec(enum.Enum):
     ALERT_PERIOD = 1
+    MSG = 2
 
-    ANOMALY_DEVIATION_DIR = 2
-    ANOMALY_NUM_DEVIATIONS = 3
-    ANOMALY_ROLLUP_INTERVAL_SEC = 4
+    ANOMALY_DEVIATION_DIR = 100
+    ANOMALY_NUM_DEVIATIONS = 101
+    ANOMALY_ROLLUP_INTERVAL_SEC = 102
 
 
 TAG_KEY_DEFAULT_MONITORS = 'default_monitors'
@@ -62,6 +63,9 @@ DDOG_MONITOR_SCHEMA = {
                     'type': 'number',
                 },
                 MonitorSpec.ALERT_PERIOD: {
+                    'type': 'string',
+                },
+                MonitorSpec.MSG: {
                     'type': 'string',
                 },
             },
