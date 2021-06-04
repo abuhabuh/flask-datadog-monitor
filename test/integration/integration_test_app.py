@@ -12,6 +12,11 @@ from flask_datadog.shared.ddog_constants import \
 flask_app = flask.Flask(__name__)
 
 
+@flask_app.route('/null_case', methods=['GET'])
+def null_case():
+    """Route is not marked for monitoring so should not be included in output"""
+    return 0
+
 @monitor_route(
     monitors={
         MonitorType.APM_ERROR_RATE_THRESHOLD: {

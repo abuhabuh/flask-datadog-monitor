@@ -8,6 +8,11 @@ from flask_datadog.shared import route_tagger_constants
 
 
 def parse_endpoints(flask_app: flask.app.Flask) -> list[FlaskEndpoint]:
+    """Parse out relevant endpoints to monitor from a Flask app
+
+    Endpoints that are not tagged are still processed. Their Terraform output
+    will just be empty.
+    """
 
     fe_list = []
 
@@ -19,6 +24,7 @@ def parse_endpoints(flask_app: flask.app.Flask) -> list[FlaskEndpoint]:
         specs: dict = \
                 flask_app.view_functions[r.endpoint].__dict__.get(
                        route_tagger_constants.ROUTE_INFO_KEY, {})
+
         fe_list.append(FlaskEndpoint(
             rule=r,
             monitor_specs=specs,
