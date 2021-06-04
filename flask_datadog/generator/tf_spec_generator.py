@@ -50,9 +50,6 @@ def _get_monitor_spec(monitor: DatadogMonitor, env: str, service_name: str) -> s
     service_monitor_name: str = _get_service_monitor_name(service_name, monitor)
     at: AlertThresholds = monitor.get_alert_thresholds()
 
-    logging.info(f'monitor type: {monitor.monitor_type}')
-    logging.info(f'   > windows: {monitor.get_anomaly_threshold_windows()}')
-
     spec_str: str = jinja_env.get_template('datadog_monitor.tmpl').render(
         service_name=service_name,
         env=env,
