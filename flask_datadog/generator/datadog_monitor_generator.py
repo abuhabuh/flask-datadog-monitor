@@ -25,27 +25,27 @@ def monitors_from_flask_endpoint(
 
     # Generate monitors for endpoint
     monitors = []
-    method: str = methods[0]
-    if monitor_specs.get(ddog_constants.TAG_KEY_DEFAULT_MONITORS, None):
-        # If generating all default monitors, add all monitors in default list
-        for mon_type in default_mon_types:
-            monitors.append(
-                DatadogMonitor(
-                    monitor_type=mon_type,
+    for method in methods:
+        if monitor_specs.get(ddog_constants.TAG_KEY_DEFAULT_MONITORS, None):
+            # If generating all default monitors, add all monitors in default list
+            for mon_type in default_mon_types:
+                monitors.append(
+                    DatadogMonitor(
+                        monitor_type=mon_type,
+                        endpoint_path=endpoint,
+                        method=method,
+                        mon_spec=dict(),
+                    )
+                )
+        else:
+            monitor_map: dict = monitor_specs.get(ddog_constants.TAG_KEY_MONITORS, {})
+            for mon_type, mon_spec in monitor_map.items():
+                monitors.append(DatadogMonitor(
+                    monitor_type=ddog_constants.MonitorType(mon_type),
                     endpoint_path=endpoint,
                     method=method,
-                    mon_spec=dict(),
-                )
-            )
-    else:
-        monitor_map: dict = monitor_specs.get(ddog_constants.TAG_KEY_MONITORS, {})
-        for mon_type, mon_spec in monitor_map.items():
-            monitors.append(DatadogMonitor(
-                monitor_type=ddog_constants.MonitorType(mon_type),
-                endpoint_path=endpoint,
-                method=method,
-                mon_spec=mon_spec,
-                ))
+                    mon_spec=mon_spec,
+                    ))
 
     return monitors
 
