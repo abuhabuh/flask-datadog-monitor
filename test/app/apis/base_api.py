@@ -39,24 +39,20 @@ def add_endpoints(flask_app, jinja_env):
             },
         },
     )
-    @flask_app.route('/error', methods=['GET'])
+    @flask_app.route('/base-test', methods=['GET'])
     def get_error():
         response_code = flask.request.args.get('resp')
         if not response_code:
             response_code = http.HTTPStatus.OK
 
+        try:
+            sleep_sec = int(flask.request.args.get('sleep', ''))
+            time.sleep(sleep_sec)
+        except ValueError:
+            sleep_sec = 0
+
         return json.dumps({
             'date':  str(datetime.datetime.now().date()),
             'response_code': response_code,
+            'slept': sleep_sec,
         }, indent=2), int(response_code)
-
-    @monitor_route()
-    @flask_app.route('/latency', methods=['GET'])
-    def get_latency():
-        sleep_sec = int(flask.request.args.get('sleep'))
-        if sleep_sec:
-            time.sleep(sleep_sec)
-        else:
-            sleep_sec = 0
-
-        return json.dumps({'status': 'ok', 'slept': sleep_sec}), http.HTTPStatus.OK

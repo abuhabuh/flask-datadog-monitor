@@ -15,14 +15,11 @@ def run_requests():
     paths = [
         '/',
         '/',
-        '/error?resp=200',
-        '/error?resp=500',
-        '/error?resp=500',
-        '/latency?sleep=',  # error
-        '/latency?sleep=',
-        '/latency?sleep=',
-        '/latency?sleep=1',
-        '/latency?sleep=2',
+        '/base-test?resp=200',
+        '/base-test?resp=500',
+        '/base-test?resp=500',
+        '/base-test?sleep=1',
+        '/base-test?sleep=2',
     ]
 
     logging.info(f'*** Starting Request Batch ***')
