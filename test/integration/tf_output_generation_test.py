@@ -95,6 +95,7 @@ def run_integration_test() -> bool:
                     logging.info(f' > Updated {fname}')
                 else:
                     test_passed = False
+            logging.info(f' > Check OK: {full_file_path}')
         logging.info(f'Output check complete')
 
     # 3. write new output files

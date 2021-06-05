@@ -24,14 +24,14 @@ resource "datadog_monitor" "AUTOGEN_integration_test_service_GET-name_only_spec_
   }
 
   
-    # Anomaly monitors have threshold windows
-    monitor_threshold_windows {
-      
-        recovery_window = "last_5m"
-      
-        trigger_window = "last_5m"
-      
-    }
+  # Anomaly monitors have threshold windows
+  monitor_threshold_windows {
+    
+      recovery_window = "last_5m"
+    
+      trigger_window = "last_5m"
+    
+  }
   
 
   include_tags = true

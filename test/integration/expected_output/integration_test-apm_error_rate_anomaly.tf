@@ -18,14 +18,14 @@ resource "datadog_monitor" "AUTOGEN_integration_test_service_GET-apm_error_rate_
   }
 
   
-    # Anomaly monitors have threshold windows
-    monitor_threshold_windows {
-      
-        recovery_window = "last_10m"
-      
-        trigger_window = "last_10m"
-      
-    }
+  # Anomaly monitors have threshold windows
+  monitor_threshold_windows {
+    
+      recovery_window = "last_10m"
+    
+      trigger_window = "last_10m"
+    
+  }
   
 
   include_tags = true

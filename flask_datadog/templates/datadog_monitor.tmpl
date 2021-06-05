@@ -24,12 +24,12 @@ resource "datadog_monitor" "{{monitor_name}}" {
   }
 
   {% if anomaly_threshold_windows %}
-    # Anomaly monitors have threshold windows
-    monitor_threshold_windows {
-      {% for k,v in anomaly_threshold_windows.items() %}
-        {{k}} = "{{v}}"
-      {% endfor %}
-    }
+  # Anomaly monitors have threshold windows
+  monitor_threshold_windows {
+    {% for k,v in anomaly_threshold_windows.items() %}
+      {{k}} = "{{v}}"
+    {% endfor %}
+  }
   {% endif %}
 
   include_tags = true
