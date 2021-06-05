@@ -1,7 +1,38 @@
 # Overview
 
-Utility for auto generating terraform monitor specifications from endpoints for
-a single service.
+Utility for auto generating DataDog terraform monitor specifications from flask
+endpoints.
+
+1. Setup DataDog Terraform integration
+1. Decorate flask endpoints you want to monitor
+1. Run the DataDog Terraform generator
+1. Apply Terraform changes
+
+
+# Decorator Examples
+
+```
+# Decorating with `datadog_monitors` will generate default monitors for each
+# method on the route
+@datadog_monitors()
+@flask_app.route('/foo', methods=['GET', 'POST'])
+def handle_foo():
+    return ''
+
+# Specifying a specific monitor will only generate that monitor for each
+# method on the route
+@datadog_monitors(
+    monitors={
+        MonitorType.APM_ERROR_RATE_THRESHOLD: {
+            MonitorSpec.CRITICAL_THRESHOLD: 0.8,
+            MonitorSpec.ALERT_PERIOD: '10m',
+        },
+    },
+)
+@flask_app.route('/foo', methods=['GET', 'POST'])
+def handle_foo():
+    return ''
+```
 
 # Running
 
