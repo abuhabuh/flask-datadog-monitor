@@ -1,7 +1,5 @@
-# temporary files
-# todo: get rid of these
+# zz_tmp_env.txt contains DataDog keys - get rid of this
 zz_tmp_env.txt
-test*.tf
 
 # vim files
 *.swp
