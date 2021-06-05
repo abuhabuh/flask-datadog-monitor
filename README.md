@@ -1,32 +1,14 @@
-# Progress
-
-DONE
-- App and DDog agent running and sending metrics
-- ErrorRate monitor prototype working
-- flask-datadog package working and usable by test app
-- route tagging is working and carries through to TF outputs
-
-TODO
-- Allow specification of just the monitors you want to default to
-- "trigger when metric is <above/below> the threshold <in total | on average | etc.> ...
-- test with different versions of Flask
-
-# Issues
-
-Need to be in the same venv as the target app we are generating for due to
-import dependencies. i.e. need to source venv of target app
-
 # Overview
 
 Utility for auto generating terraform monitor specifications from endpoints for
 a single service.
 
-## Running
+# Running
 
-### Running the test app service against a test DataDog
+## Running the test app service against a test DataDog account
 
 Assumptions
-- Test DataDog account is create and API Key is available
+- Test DataDog account is created; API and APP key are known
 
 Running
 1. Set DATADOG_API_KEY in env vars
@@ -39,14 +21,13 @@ Local setup
   can modify python files while testing.
 
 
-### Running auto terraform generator
+## Running auto terraform generator
 
 Running
 1. source the venv that the application runs in
-  1. todo: need to make parser into an executable
 1. python monitor_generator.py ../test-app/app:app
 
-## Testing
+# Testing
 
 1. Ensure venv is created. From root dir: `python -m venv venv`
 2. Install testing dependencies: `./venv/bin/pip install .[testing]` (setup.cfg has `testing` extras_require)
@@ -55,4 +36,11 @@ Running
 # Reference
 
 - Flask App Object API: https://tedboy.github.io/flask/interface_api.application_object.html
+
+# TODO
+
+- Allow specification of just the monitors you want to default to
+- "trigger when metric is <above/below> the threshold <in total | on average | etc.> ...
+- test with different versions of Flask
+- make terraform file generator into a cmd line executable
 

@@ -20,13 +20,11 @@ def validate_tag(tag_spec: dict):
 def datadog_monitors(monitors: Optional[dict] = None):
     """Enable auto DataDog monitor spec generation on endpoint.
 
-    TODO: hook up default monitors here instead of monitors_from_flask_endpoint
-    so it's easier to trace what monitors get assigned.
-
     Example:
 
-    @tag(monitors={})
-    def foo():
+    @datadog_monitors()
+    @flask_app.route('/', methods=['GET'])
+    def handle_root():
         pass
 
     """
