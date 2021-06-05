@@ -30,7 +30,17 @@ local-down:
 check: clean-py-cache
 	mypy -p flask_datadog
 test:
+	@echo ">>>"
+	@echo ">>> Running unit tests with pytest"
+	@echo ">>>"
+	pytest .
+	@echo ">>>"
+	@echo ">>> Running custom integration test script"
+	@echo ">>>"
 	$(PYTHON_EXEC) test/integration/tf_output_generation_test.py
+	@echo ">>>"
+	@echo ">>> Test completes"
+	@echo ">>>"
 
 # Deploy datadog configs
 sync-datadog: gen-tf
@@ -42,10 +52,10 @@ sync-datadog: gen-tf
 clean-py-cache:
 	find . | grep -E "(__pycache__|.mypy_cache|\.pyc|\.pyo$$)" | xargs rm -rf
 
-gen-tf:
-	$(PYTHON_EXEC) flask_datadog/generator/main.py $(APP_DIR)/app:app $(TERRAFORM_DIR)/auto-gen-monitors test
-
 # Build all docker assets
 docker:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) build
 	docker image prune -f
+
+gen-tf:
+	$(PYTHON_EXEC) flask_datadog/generator/main.py $(APP_DIR)/app:app $(TERRAFORM_DIR)/auto-gen-monitors test

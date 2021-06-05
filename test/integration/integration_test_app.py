@@ -62,15 +62,6 @@ def apm_error_rate_anomaly_route():
     return 0
 
 
-"""
-# Method specific configs should override overarching configs
-PUT_SPECIFIC: {
-    MonitorThresholdType.CRITICAL_THRESHOLD: 0.7,
-    MonitorSpec.ALERT_PERIOD: '5m',
-},
-# Should be able to combine methods into a single monitor
-COMBINE_METHODS: ['GET', 'POST'],
-"""
 @monitor_route(
     monitors={
         MonitorType.APM_ERROR_RATE_THRESHOLD: {
@@ -81,6 +72,26 @@ COMBINE_METHODS: ['GET', 'POST'],
 )
 @flask_app.route('/multiple_methods', methods=['GET', 'PUT', 'POST', 'PATCH'])
 def multiple_methods():
-    """Test route. Return value is unused"""
+    """Test route with multiple methods.
+
+    Monitors for all methods should be generated.
+    """
     return 0
 
+
+@monitor_route(
+    monitors={
+        MonitorType.APM_ERROR_RATE_THRESHOLD: {
+            MonitorSpec.METHODS: ['GET'],
+            MonitorThresholdType.CRITICAL_THRESHOLD: 0.8,
+            MonitorSpec.ALERT_PERIOD: '10m',
+        },
+    },
+)
+@flask_app.route('/multiple_methods_get_only', methods=['GET', 'PUT', 'POST', 'PATCH'])
+def multiple_methods_get_only():
+    """Test multiple methods route with single method spec'd.
+
+    Only GET monitor should be generated
+    """
+    return 0

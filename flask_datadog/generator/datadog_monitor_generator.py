@@ -18,17 +18,17 @@ def monitors_from_flask_endpoint(
     ]
 
     endpoint: str = fe.get_endpoint()
-    methods: list[str] = fe.get_methods()
     monitor_specs: dict = fe.get_specs()
 
     route_tagger.validate_tag(monitor_specs)
 
     # Generate monitors for endpoint
     monitors = []
-    for method in methods:
-        if monitor_specs.get(ddog_constants.TAG_KEY_DEFAULT_MONITORS, None):
-            # If generating all default monitors, add all monitors in default list
-            for mon_type in default_mon_types:
+    if monitor_specs.get(ddog_constants.TAG_KEY_DEFAULT_MONITORS, None):
+        # If generating all default monitors, add all monitors in default list
+        # for each method
+        for mon_type in default_mon_types:
+            for method in _get_methods(fe.get_methods()):
                 monitors.append(
                     DatadogMonitor(
                         monitor_type=mon_type,
@@ -37,9 +37,14 @@ def monitors_from_flask_endpoint(
                         mon_spec=dict(),
                     )
                 )
-        else:
-            monitor_map: dict = monitor_specs.get(ddog_constants.TAG_KEY_MONITORS, {})
-            for mon_type, mon_spec in monitor_map.items():
+    else:
+        monitor_map: dict = monitor_specs.get(ddog_constants.TAG_KEY_MONITORS, {})
+        for mon_type, mon_spec in monitor_map.items():
+
+            for method in _get_methods(
+                fe.get_methods(),
+                mon_spec.get(ddog_constants.MonitorSpec.METHODS, []),
+            ):
                 monitors.append(DatadogMonitor(
                     monitor_type=ddog_constants.MonitorType(mon_type),
                     endpoint_path=endpoint,
@@ -49,3 +54,29 @@ def monitors_from_flask_endpoint(
 
     return monitors
 
+
+def _get_methods(fe_methods: list[str], custom_methods: list[str] = None) -> list[str]:
+    """Return http methods derived from flask end point and monitor specs.
+
+    A flask endpoint has methods bound to it during endpoint definitions.
+    Monitor specs also could have methods specified to override default
+    methods spec'd by the flask endpoint. Monitor specs have methods specified
+    when the use only wants monitors generated for a certain set of methods on
+    the flask endpoint.
+
+    :param fe_methods: list of methods bound to the flask endpoint
+    :param custom_methods: list of custom methods specified in monitor spec
+    """
+    if not fe_methods:
+        return []
+    if not custom_methods:
+        custom_methods = []
+
+    fe_methods: set[str] = {s.lower() for s in fe_methods}
+    custom_methods: set[str] = {s.lower() for s in custom_methods}
+
+    methods_set: set = fe_methods
+    if custom_methods:
+        methods_set = custom_methods.intersection(fe_methods)
+
+    return sorted(list(methods_set))

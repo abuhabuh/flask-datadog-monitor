@@ -7,9 +7,6 @@ DONE
 - route tagging is working and carries through to TF outputs
 
 TODO
-- multiple methods
-  - different methods need to support different thresholds
-  - need to be able to club methods together under a common monitor
 - "trigger when metric is <above/below> the threshold <in total | on average | etc.> ...
 - Test anomaly alert working
 - Test with different versions of Flask
@@ -49,6 +46,13 @@ Running
   1. todo: need to make parser into an executable
 1. python monitor_generator.py ../test-app/app:app
 
+## Testing
+
+1. Ensure venv is created. From root dir: `python -m venv venv`
+2. Install testing dependencies: `./venv/bin/pip install .[testing]` (setup.cfg has `testing` extras_require)
+3. `make test`
+
 # Reference
 
 - Flask App Object API: https://tedboy.github.io/flask/interface_api.application_object.html
+

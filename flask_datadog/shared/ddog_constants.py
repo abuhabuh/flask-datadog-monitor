@@ -31,6 +31,7 @@ class MonitorThresholdType(enum.Enum):
 class MonitorSpec(enum.Enum):
     ALERT_PERIOD = 1
     MSG = 2
+    METHODS = 3
 
     ANOMALY_DEVIATION_DIR = 100
     ANOMALY_NUM_DEVIATIONS = 101

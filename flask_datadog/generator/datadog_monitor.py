@@ -54,21 +54,23 @@ class DatadogMonitor:
     @property
     def name(self) -> str:
         """Return name of DataDog monitor name
+
+        TODO: make this function customizable by end user.
         """
         cleaned_endpoint_path: str = endpoint_util.clean_endpoint_for_naming(
             self.endpoint_path,
         )
         # Use MonitorType.value because we can keep the enum value the same
         # while we we maintain flexibility to refactor the enum name in the code
-        return f'{self.method}-{cleaned_endpoint_path}_{self.monitor_type.value}'
+        return f'{self.method.upper()}-{cleaned_endpoint_path}_{self.monitor_type.value}'
 
     @property
     def resource_name(self) -> str:
         """Datadog format resource name.
 
-        Used for tagging a monitor.
+        Used for `tags` field in terraform spec for a monitor.
         """
-        return f'{self.method}_{self.endpoint_path}'.lower()
+        return f'{self.method}_{self.endpoint_path.lower()}'.lower()
 
     @property
     def terraform_monitor_type(self) -> str:
