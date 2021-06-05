@@ -72,11 +72,11 @@ def _get_methods(fe_methods: list[str], custom_methods: list[str] = None) -> lis
     if not custom_methods:
         custom_methods = []
 
-    fe_methods: set[str] = {s.lower() for s in fe_methods}
-    custom_methods: set[str] = {s.lower() for s in custom_methods}
+    fe_methods_set: set[str] = {s.lower() for s in fe_methods}
+    custom_methods_set: set[str] = {s.lower() for s in custom_methods}
 
-    methods_set: set = fe_methods
+    methods_set: set = fe_methods_set
     if custom_methods:
-        methods_set = custom_methods.intersection(fe_methods)
+        methods_set = custom_methods_set.intersection(fe_methods_set)
 
     return sorted(list(methods_set))

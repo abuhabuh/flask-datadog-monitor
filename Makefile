@@ -29,18 +29,11 @@ local-down:
 
 check: clean-py-cache
 	mypy -p flask_datadog
-test:
-	@echo ">>>"
-	@echo ">>> Running unit tests with pytest"
-	@echo ">>>"
+test-unit:
 	pytest .
-	@echo ">>>"
-	@echo ">>> Running custom integration test script"
-	@echo ">>>"
+test-integration:
 	$(PYTHON_EXEC) test/integration/tf_output_generation_test.py
-	@echo ">>>"
-	@echo ">>> Test completes"
-	@echo ">>>"
+test: check test-unit test-integration
 
 # Deploy datadog configs
 sync-datadog: gen-tf

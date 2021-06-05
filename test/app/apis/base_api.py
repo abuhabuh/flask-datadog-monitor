@@ -33,7 +33,7 @@ def add_endpoints(flask_app, jinja_env):
             MonitorType.APM_ERROR_RATE_ANOMALY: {
                 MonitorThresholdType.CRITICAL_THRESHOLD: 0.7,
                 MonitorSpec.ANOMALY_DEVIATION_DIR: 'above',
-                MonitorSpec.ANOMALY_NUM_DEVIATIONS: 2,
+                MonitorSpec.ANOMALY_NUM_DEVIATIONS: 1,
                 MonitorSpec.ANOMALY_ROLLUP_INTERVAL_SEC: 120,
                 MonitorSpec.ALERT_PERIOD: '10m',
             },

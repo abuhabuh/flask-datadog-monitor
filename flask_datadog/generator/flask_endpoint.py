@@ -34,13 +34,6 @@ class FlaskEndpoint:
         """
         return self._monitor_specs
 
-    def __str__(self) -> str:
-        """todo: remove this - only for testing
-        """
-        return json.dumps({
-            self.get_endpoint(): self.get_methods(),
-        })
-
 
 def _filter_methods(methods: set) -> set:
     """Filter out HEAD and OPTIONS methods.

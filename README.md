@@ -8,8 +8,7 @@ DONE
 
 TODO
 - "trigger when metric is <above/below> the threshold <in total | on average | etc.> ...
-- Test anomaly alert working
-- Test with different versions of Flask
+- test with different versions of Flask
 
 # Issues
 
