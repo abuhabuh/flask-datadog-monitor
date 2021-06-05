@@ -9,9 +9,8 @@ import flask
 
 from flask_datadog.monitor import datadog_monitors
 from flask_datadog.shared.ddog_constants import \
-        MonitorSpec, \
         MonitorType, \
-        MonitorThresholdType
+        MonitorSpec
 
 
 def add_endpoints(flask_app, jinja_env):
@@ -24,14 +23,14 @@ def add_endpoints(flask_app, jinja_env):
     @datadog_monitors(
         monitors={
             MonitorType.APM_ERROR_RATE_THRESHOLD: {
-                MonitorThresholdType.CRITICAL_THRESHOLD: 0.8,
-                MonitorThresholdType.CRITICAL_RECOVERY: 0.7,
-                MonitorThresholdType.WARNING_THRESHOLD: 0.5,
-                MonitorThresholdType.WARNING_RECOVERY: 0.4,
+                MonitorSpec.CRITICAL_THRESHOLD: 0.8,
+                MonitorSpec.CRITICAL_RECOVERY_THRESHOLD: 0.7,
+                MonitorSpec.WARNING_THRESHOLD: 0.5,
+                MonitorSpec.WARNING_RECOVERY_THRESHOLD: 0.4,
                 MonitorSpec.ALERT_PERIOD: '10m',
             },
             MonitorType.APM_ERROR_RATE_ANOMALY: {
-                MonitorThresholdType.CRITICAL_THRESHOLD: 0.7,
+                MonitorSpec.CRITICAL_THRESHOLD: 0.7,
                 MonitorSpec.ANOMALY_DEVIATION_DIR: 'above',
                 MonitorSpec.ANOMALY_NUM_DEVIATIONS: 1,
                 MonitorSpec.ANOMALY_ROLLUP_INTERVAL_SEC: 120,

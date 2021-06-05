@@ -2,7 +2,9 @@ from dataclasses import dataclass
 from typing import Optional
 
 from flask_datadog.generator import endpoint_util
-from flask_datadog.shared.ddog_constants import MonitorSpec, MonitorType, MonitorThresholdType
+from flask_datadog.shared.ddog_constants import \
+    MonitorType, \
+    MonitorSpec
 
 
 class DatadogMonitorFormatException(Exception):
@@ -105,10 +107,10 @@ class DatadogMonitor:
     def get_alert_thresholds(self) -> AlertThresholds:
         """Alert thresholds with defaults
         """
-        critical_threshold: float = self.mon_spec.get(MonitorThresholdType.CRITICAL_THRESHOLD, None)
-        critical_recovery: float = self.mon_spec.get(MonitorThresholdType.CRITICAL_RECOVERY, None)
-        warning_threshold: float = self.mon_spec.get(MonitorThresholdType.WARNING_THRESHOLD, None)
-        warning_recovery: float = self.mon_spec.get(MonitorThresholdType.WARNING_RECOVERY, None)
+        critical_threshold: float = self.mon_spec.get(MonitorSpec.CRITICAL_THRESHOLD, None)
+        critical_recovery: float = self.mon_spec.get(MonitorSpec.CRITICAL_RECOVERY_THRESHOLD, None)
+        warning_threshold: float = self.mon_spec.get(MonitorSpec.WARNING_THRESHOLD, None)
+        warning_recovery: float = self.mon_spec.get(MonitorSpec.WARNING_RECOVERY_THRESHOLD, None)
 
         if all(x is None for x in [
             critical_recovery,
@@ -183,9 +185,17 @@ class DatadogMonitor:
             # TODO: only basic supported for now -- other's are 'agile',
             #   'robust' and have more associated configs
             anomaly_algo = 'basic'
-            anomaly_deviation_direction = self.mon_spec[MonitorSpec.ANOMALY_DEVIATION_DIR]
-            anomaly_num_deviations = self.mon_spec[MonitorSpec.ANOMALY_NUM_DEVIATIONS]
-            anomaly_rollup_interval_sec = self.mon_spec[MonitorSpec.ANOMALY_ROLLUP_INTERVAL_SEC]
+            default_deviation_dir = 'both'
+            default_num_deviations = 2
+            # TODO: map rollup interval to alert_period because possible
+            # rollup interval values are conditional on alert_period
+            default_rollup_interval_sec = 120
+            deviation_dir: str = self.mon_spec.get(
+                MonitorSpec.ANOMALY_DEVIATION_DIR, default_deviation_dir)
+            anomaly_num_deviations = self.mon_spec.get(
+                MonitorSpec.ANOMALY_NUM_DEVIATIONS, default_num_deviations)
+            anomaly_rollup_interval_sec = self.mon_spec.get(
+                MonitorSpec.ANOMALY_ROLLUP_INTERVAL_SEC, default_rollup_interval_sec)
             if anomaly_rollup_interval_sec not in DatadogMonitor.ROLLUP_TO_AVG_TIME_MAP:
                 raise DatadogMonitorFormatException(f'Rollup interval ({anomaly_rollup_interval_sec}) not supported.')
 
@@ -202,7 +212,7 @@ class DatadogMonitor:
                     
                     '{anomaly_algo}',
                     {anomaly_num_deviations},
-                    direction='{anomaly_deviation_direction}',
+                    direction='{deviation_dir}',
                     alert_window='last_{self.alert_period}',
                     interval={anomaly_rollup_interval_sec},
                     count_default_zero='true'

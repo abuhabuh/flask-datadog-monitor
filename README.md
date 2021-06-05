@@ -7,6 +7,7 @@ DONE
 - route tagging is working and carries through to TF outputs
 
 TODO
+- Allow specification of just the monitors you want to default to
 - "trigger when metric is <above/below> the threshold <in total | on average | etc.> ...
 - test with different versions of Flask
 

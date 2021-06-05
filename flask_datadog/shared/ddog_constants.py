@@ -21,21 +21,19 @@ class MonitorType(enum.Enum):
         ]
 
 
-class MonitorThresholdType(enum.Enum):
-    CRITICAL_THRESHOLD = 1
-    CRITICAL_RECOVERY = 2
-    WARNING_THRESHOLD = 3
-    WARNING_RECOVERY = 4
-
-
 class MonitorSpec(enum.Enum):
     ALERT_PERIOD = 1
     MSG = 2
     METHODS = 3
 
-    ANOMALY_DEVIATION_DIR = 100
-    ANOMALY_NUM_DEVIATIONS = 101
-    ANOMALY_ROLLUP_INTERVAL_SEC = 102
+    CRITICAL_THRESHOLD = 100
+    CRITICAL_RECOVERY_THRESHOLD = 102
+    WARNING_THRESHOLD = 103
+    WARNING_RECOVERY_THRESHOLD = 104
+
+    ANOMALY_DEVIATION_DIR = 200
+    ANOMALY_NUM_DEVIATIONS = 201
+    ANOMALY_ROLLUP_INTERVAL_SEC = 202
 
 
 TAG_KEY_DEFAULT_MONITORS = 'default_monitors'
@@ -51,16 +49,16 @@ DDOG_MONITOR_SCHEMA = {
             # base schema with other attributes
             'additionalProperties': True,
             'properties': {
-                MonitorThresholdType.CRITICAL_THRESHOLD: {
+                MonitorSpec.CRITICAL_THRESHOLD: {
                     'type': 'number',
                 },
-                MonitorThresholdType.CRITICAL_RECOVERY: {
+                MonitorSpec.CRITICAL_RECOVERY_THRESHOLD: {
                     'type': 'number',
                 },
-                MonitorThresholdType.WARNING_THRESHOLD: {
+                MonitorSpec.WARNING_THRESHOLD: {
                     'type': 'number',
                 },
-                MonitorThresholdType.WARNING_RECOVERY: {
+                MonitorSpec.WARNING_RECOVERY_THRESHOLD: {
                     'type': 'number',
                 },
                 MonitorSpec.ALERT_PERIOD: {
@@ -86,6 +84,14 @@ DDOG_MONITOR_SCHEMA = {
             'additionalProperties': False,
             'properties': {
                 MonitorType.APM_ERROR_RATE_THRESHOLD: {
+                    'allOf': [
+                        {
+                            '$ref': '#/definitions/base_monitor_properties',
+                        },
+                        {},
+                    ],
+                },
+                MonitorType.APM_LATENCY_THRESHOLD: {
                     'allOf': [
                         {
                             '$ref': '#/definitions/base_monitor_properties',
