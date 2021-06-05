@@ -7,7 +7,7 @@ import time
 
 import flask
 
-from flask_datadog.monitor import monitor_route
+from flask_datadog.monitor import datadog_monitors
 from flask_datadog.shared.ddog_constants import \
         MonitorSpec, \
         MonitorType, \
@@ -16,12 +16,12 @@ from flask_datadog.shared.ddog_constants import \
 
 def add_endpoints(flask_app, jinja_env):
 
-    @monitor_route()
+    @datadog_monitors()
     @flask_app.route('/', methods=['GET'])
     def get_root():
         return jinja_env.get_template('index.html').render(), http.HTTPStatus.OK
 
-    @monitor_route(
+    @datadog_monitors(
         monitors={
             MonitorType.APM_ERROR_RATE_THRESHOLD: {
                 MonitorThresholdType.CRITICAL_THRESHOLD: 0.8,

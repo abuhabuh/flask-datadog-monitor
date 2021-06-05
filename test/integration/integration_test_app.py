@@ -2,7 +2,7 @@
 """
 import flask
 
-from flask_datadog.monitor import monitor_route
+from flask_datadog.monitor import datadog_monitors
 from flask_datadog.shared.ddog_constants import \
         MonitorSpec, \
         MonitorType, \
@@ -18,7 +18,7 @@ def null_case():
     return 0
 
 
-@monitor_route(
+@datadog_monitors(
     monitors={
         MonitorType.APM_ERROR_RATE_THRESHOLD: {
             MonitorThresholdType.CRITICAL_THRESHOLD: 0.8,
@@ -38,14 +38,14 @@ def base_test():
     return 0
 
 
-@monitor_route()
+@datadog_monitors()
 @flask_app.route('/base_test_all_monitors', methods=['GET'])
 def base_test_all_monitors():
     """Test route. Return value is unused"""
     return 0
 
 
-@monitor_route(
+@datadog_monitors(
     monitors={
         MonitorType.APM_ERROR_RATE_ANOMALY: {
             MonitorThresholdType.CRITICAL_THRESHOLD: 0.3,
@@ -62,7 +62,7 @@ def apm_error_rate_anomaly_route():
     return 0
 
 
-@monitor_route(
+@datadog_monitors(
     monitors={
         MonitorType.APM_ERROR_RATE_THRESHOLD: {
             MonitorThresholdType.CRITICAL_THRESHOLD: 0.8,
@@ -79,7 +79,7 @@ def multiple_methods():
     return 0
 
 
-@monitor_route(
+@datadog_monitors(
     monitors={
         MonitorType.APM_ERROR_RATE_THRESHOLD: {
             MonitorSpec.METHODS: ['GET'],
