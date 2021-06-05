@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from flask_datadog.generator import endpoint_util
-from flask_datadog.shared.ddog_constants import \
+from flask_datadog.shared.datadog_constants import \
     MonitorType, \
     MonitorSpec
 

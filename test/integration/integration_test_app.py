@@ -3,7 +3,7 @@
 import flask
 
 from flask_datadog.monitor import datadog_monitors
-from flask_datadog.shared.ddog_constants import \
+from flask_datadog.shared.datadog_constants import \
         MonitorType, \
         MonitorSpec
 
