@@ -1,4 +1,4 @@
-.PHONY: build check clean test local-all sync-datadog local-up local-down
+.PHONY: build check clean local-all local-down local-up release sync-datadog test
 
 # Variables
 APP_DIR = test/app
@@ -17,6 +17,9 @@ clean: clean-py-cache
 	rm -rf *.egg-info
 	rm -rf dist
 	rm -rf build
+# Release pkg to pypi
+release: clean build
+	twine upload dist/*
 
 # Deploy datadog configs and standup local
 local-all: sync-datadog local-up
