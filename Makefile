@@ -54,4 +54,9 @@ docker:
 	docker image prune -f
 
 gen-tf:
-	$(PYTHON_EXEC) flask_datadog/generator/main.py $(APP_DIR)/app:app $(TERRAFORM_DIR)/auto-gen-monitors test
+	$(PYTHON_EXEC) flask_datadog/scripts/cmd_line.py gen-terraform \
+		--prefix test \
+		--service test-app-service \
+		--env prod \
+		$(APP_DIR)/app:app \
+		$(TERRAFORM_DIR)/auto-gen-monitors

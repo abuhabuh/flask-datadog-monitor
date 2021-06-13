@@ -32,14 +32,13 @@ def _flask_app_from_location(module_name: str) -> flask.app.Flask:
     return getattr(flask_app_module, flask_app_obj)
 
 
-def main():
+def gen_tf(
+        app_location: str,
+        output_dir: str,
+        service_name: str,
+        service_env: str,
+        tf_file_prefix: str):
     logging.info(f'Started Terraform spec generation.')
-    app_location: str = sys.argv[1]
-    output_dir: str = sys.argv[2]
-    tf_file_prefix: str = sys.argv[3]
-
-    service_name = os.environ['DD_MONITOR_GEN_SERVICE']
-    service_env = os.environ['DD_MONITOR_GEN_SERVICE_ENV']
 
     flask_app: flask.app.Flask = _flask_app_from_location(app_location)
 
@@ -55,6 +54,3 @@ def main():
             fp.write(contents)
         logging.info(f' > wrote output for {output_dir}/{fname}')
 
-
-if __name__ == '__main__':
-    main()
