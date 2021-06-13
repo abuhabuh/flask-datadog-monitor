@@ -1,6 +1,6 @@
 """Unit tests
 """
-import pytest
+import pytest  # type: ignore
 
 from flask_datadog.generator import datadog_monitor_generator
 

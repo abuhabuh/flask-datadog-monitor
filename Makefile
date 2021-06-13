@@ -9,6 +9,7 @@ PYTHON_EXEC = export PYTHONPATH=`pwd` && venv/bin/python
 
 # *** Main targets
 
+## Deploy and Build
 # Build
 build: clean
 	python3 -m build
@@ -20,39 +21,41 @@ clean: clean-py-cache
 # Release pkg to pypi
 release: clean build
 	twine upload dist/*
+# Deploy configs to Datadog account
+sync-datadog: gen-tf
+	terraform -chdir=$(TERRAFORM_DIR) apply
 
-# Deploy datadog configs and standup local
-local-all: sync-datadog local-up
+## Local Testing
 # Build and deploy test app locally along with associated DataDog monitors
 # - Datadog account env vars must be specified
 local-up: docker local-down
 	docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
 local-down:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down
+# Unit and Integration Testing
+test: check test-unit test-integration
 
+
+# *** Supporting targets
+
+## Testing
 check: clean-py-cache
 	mypy -p flask_datadog
 test-unit:
 	pytest .
 test-integration:
 	$(PYTHON_EXEC) test/integration/tf_output_generation_test.py
-test: check test-unit test-integration
 
-# Deploy datadog configs
-sync-datadog: gen-tf
-	terraform -chdir=$(TERRAFORM_DIR) apply
-
-
-# *** Supporting targets
-
-clean-py-cache:
-	find . | grep -E "(__pycache__|.mypy_cache|\.pyc|\.pyo$$)" | xargs rm -rf
-
+## Building and Deploy
 # Build all docker assets
 docker:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) build
 	docker image prune -f
 
+clean-py-cache:
+	find . | grep -E "(__pycache__|.mypy_cache|\.pyc|\.pyo$$)" | xargs rm -rf
+
+# Generate Terraform config for test app
 gen-tf:
 	$(PYTHON_EXEC) flask_datadog/scripts/cmd_line.py gen-terraform \
 		--prefix test \
