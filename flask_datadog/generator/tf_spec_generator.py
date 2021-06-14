@@ -2,6 +2,7 @@
 """
 import logging
 import pathlib
+from typing import Optional
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -18,8 +19,10 @@ jinja_env = Environment(
 )
 
 
-def get_tf_fname(tf_file_prefix: str, endpoint: str) -> str:
-    return f'{tf_file_prefix}-{endpoint}.tf'
+def get_tf_fname(tf_file_prefix: Optional[str], endpoint: str) -> str:
+    if tf_file_prefix:
+        return f'{tf_file_prefix}-{endpoint}.tf'
+    return f'{endpoint}.tf'
 
 
 def get_tf_contents_from_flask_endpoint(

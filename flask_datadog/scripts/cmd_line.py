@@ -3,10 +3,14 @@ Commandline functionality for package
 
 e.g., Generate terraform templates
 """
+import logging
 
 import click
 
 from flask_datadog.generator import main_generator_logic
+
+
+logging.basicConfig(level=logging.INFO)
 
 
 @click.group()
